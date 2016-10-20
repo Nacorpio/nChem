@@ -171,6 +171,7 @@ namespace nChem
         public override string ToString()
         {
             var sb = new StringBuilder();
+            sb.Append(Symbol + ": ");
 
             foreach (var subshell in Subshells)
                 sb.Append($"{subshell}{subshell.Electrons} ");

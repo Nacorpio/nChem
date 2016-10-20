@@ -1,9 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace nChem
 {
+    public static class FormatUtils
+    {
+        public static Dictionary<char, char> Superscripts = new Dictionary<char, char>
+        {
+            {'⁰', '0'},
+            {'¹', '1'},
+            {'²', '2'},
+            {'³', '3'},
+            {'⁴', '4'},
+            {'⁵', '5'},
+            {'⁶', '6'},
+            {'⁷', '7'},
+            {'⁸', '8'},
+            {'⁹', '9'},
+            {'⁺', '+'},
+            {'⁻', '-'}
+        };
+
+        public static Dictionary<char, char> Subscripts = new Dictionary<char, char>
+        {
+            {'₀', '0'},
+            {'₁', '1'},
+            {'₂', '2'},
+            {'₃', '3'},
+            {'₄', '4'},
+            {'₅', '5'},
+            {'₆', '6'},
+            {'₇', '7'},
+            {'₈', '8'},
+            {'₉', '9'},
+            {'₊', '+'},
+            {'₋', '-'}
+        };
+
+        public static short ToInt16(char[] chars)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var c in chars)
+            {
+                if (Superscripts.ContainsKey(c))
+                {
+                    sb.Append(Superscripts[c]);
+                    continue;
+                }
+
+                if (Subscripts.ContainsKey(c))
+                    sb.Append(Subscripts[c]);
+            }
+
+            return short.Parse(sb.ToString());
+        }
+
+        public static short ToInt16(string input)
+        {
+            return ToInt16(input.ToCharArray());
+        }
+
+        public static short ToInt16(char c)
+        {
+            var sb = new StringBuilder();
+
+            if (Superscripts.ContainsKey(c))
+                sb.Append(Superscripts[c]);
+
+            if (Subscripts.ContainsKey(c))
+                sb.Append(Subscripts[c]);
+
+            return short.Parse(sb.ToString());
+        }
+        
+        public static int ToInt32(char c)
+        {
+            return ToInt16(c);
+        }
+
+        public static long ToInt64(char c)
+        {
+            return ToInt32(c);
+        }
+    }
+
     public static class MathUtils
     {
         /// <summary>

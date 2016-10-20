@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace nChem
@@ -7,7 +8,7 @@ namespace nChem
     /// <summary>
     /// Represents a configuration for the electrons within an <see cref="Atom"/>.
     /// </summary>
-    public sealed class ShellConfiguration : List<Shell>
+    public sealed class ShellConfiguration
     {
         /// <summary>
         /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
@@ -15,6 +16,7 @@ namespace nChem
         /// <param name="values">An ordered collection of shells.</param>
         public ShellConfiguration(int[] values)
         {
+            Shells = new Collection<Shell>();
             for (var i = 0; i < values.Length; i++)
             {
                 int value = values[i];
@@ -22,7 +24,7 @@ namespace nChem
                 if (value > ChemistryUtils.GetShellCapacity(i) || value < 0)
                     throw new IndexOutOfRangeException(nameof(value));
 
-                Add(new Shell(ChemistryUtils.ShellLabels[i], value));
+                Shells.Add(new Shell(ChemistryUtils.ShellLabels[i], value));
             }
         }
 
@@ -32,6 +34,7 @@ namespace nChem
         /// <param name="values">An ordered dictionary of shells.</param>
         public ShellConfiguration(Dictionary<char, int> values)
         {
+            Shells = new Collection<Shell>();
             for (var i = 0; i < values.Count; i++)
             {
                 int capacity = ChemistryUtils.GetShellCapacity(i);
@@ -40,7 +43,7 @@ namespace nChem
                 if (current.Value > capacity || current.Value < 0)
                     throw new IndexOutOfRangeException(nameof(current.Value));
 
-                Add(new Shell(current.Key, current.Value));
+                Shells.Add(new Shell(current.Key, current.Value));
             }
         }
 
@@ -49,17 +52,22 @@ namespace nChem
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns></returns>
-        public Shell this[char symbol] => this.FirstOrDefault(x => x.Symbol == symbol);
+        public Shell this[char symbol] => Shells.FirstOrDefault(x => x.Symbol == symbol);
+
+        /// <summary>
+        /// Gets the shells of the <see cref="ShellConfiguration"/>.
+        /// </summary>
+        public Collection<Shell> Shells { get; }
 
         /// <summary>
         /// Gets the amount of paired electrons in the <see cref="ShellConfiguration"/>.
         /// </summary>
-        public int PairedElectrons => this.Sum(x => x.PairedElectrons);
+        public int PairedElectrons => Shells.Sum(x => x.PairedElectrons);
 
         /// <summary>
         /// Gets the amount of unpaired electrons in the <see cref="ShellConfiguration"/>.
         /// </summary>
-        public int UnpairedElectrons => this.Sum(x => x.UnpairedElectrons);
+        public int UnpairedElectrons => Shells.Sum(x => x.UnpairedElectrons);
 
         /// <summary>
         /// Returns the valence shell of the <see cref="ShellConfiguration"/>.
@@ -67,7 +75,7 @@ namespace nChem
         /// <returns></returns>
         public Shell GetValenceShell()
         {
-            return this.Last();
+            return Shells.Last();
         }
 
         /// <summary>
@@ -75,7 +83,7 @@ namespace nChem
         /// </summary>
         public Dictionary<char, int> ToDictionary()
         {
-            return this.ToDictionary(x => x.Symbol, y => y.Electrons);
+            return Shells.ToDictionary(x => x.Symbol, y => y.Electrons);
         }
     }
 }

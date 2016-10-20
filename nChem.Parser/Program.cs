@@ -6,7 +6,7 @@ namespace nChem.Parser
     {
         static void Main(string[] args)
         {
-            Atom atom = new Atom(Element.Phosphorus);
+            var atom = new Atom(Element.Carbon);
             ShellConfiguration configuration = atom.GetShellConfiguration();
         }
     }

@@ -51,7 +51,7 @@ namespace nChem
         /// <summary>
         /// Gets the amount of paired electrons in the <see cref="Subshell"/>.
         /// </summary>
-        public int PairedElectrons => Orbitals.Count(x => x.IsPaired()) * 2;
+        public int PairedElectrons => Electrons - UnpairedElectrons;
 
         /// <summary>
         /// Gets the amount of unpaired electrons in the <see cref="Subshell"/>.

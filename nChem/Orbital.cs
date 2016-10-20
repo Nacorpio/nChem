@@ -47,6 +47,9 @@
         /// <returns></returns>
         public bool IsPaired()
         {
+            if (this[0] == null && this[1] == null)
+                return true;
+
             if (this[0] == null || this[1] == null)
                 return false;
 
