@@ -19,10 +19,10 @@ namespace nChem
             {
                 int value = values[i];
 
-                if (value > MathUtilities.GetShellCapacity(i) || value < 0)
+                if (value > ChemistryUtils.GetShellCapacity(i) || value < 0)
                     throw new IndexOutOfRangeException(nameof(value));
 
-                Add(new Shell(MathUtilities.ShellLabels[i], value));
+                Add(new Shell(ChemistryUtils.ShellLabels[i], value));
             }
         }
 
@@ -34,7 +34,7 @@ namespace nChem
         {
             for (var i = 0; i < values.Count; i++)
             {
-                int capacity = MathUtilities.GetShellCapacity(i);
+                int capacity = ChemistryUtils.GetShellCapacity(i);
                 KeyValuePair<char, int> current = values.ToList()[i];
 
                 if (current.Value > capacity || current.Value < 0)
@@ -50,6 +50,16 @@ namespace nChem
         /// <param name="symbol">The symbol.</param>
         /// <returns></returns>
         public Shell this[char symbol] => this.FirstOrDefault(x => x.Symbol == symbol);
+
+        /// <summary>
+        /// Gets the amount of paired electrons in the <see cref="ShellConfiguration"/>.
+        /// </summary>
+        public int PairedElectrons => this.Sum(x => x.PairedElectrons);
+
+        /// <summary>
+        /// Gets the amount of unpaired electrons in the <see cref="ShellConfiguration"/>.
+        /// </summary>
+        public int UnpairedElectrons => this.Sum(x => x.UnpairedElectrons);
 
         /// <summary>
         /// Returns the valence shell of the <see cref="ShellConfiguration"/>.

@@ -34,11 +34,6 @@ namespace nChem
         public char Parent { get; internal set; }
 
         /// <summary>
-        /// Gets the identifier of the <see cref="Subshell"/>.
-        /// </summary>
-        public int Id => MathUtilities.GetShellIndex(Parent) + 1;
-
-        /// <summary>
         /// Gets the orbitals of the <see cref="Subshell"/>.
         /// </summary>
         public Orbital[] Orbitals { get; }
@@ -46,12 +41,22 @@ namespace nChem
         /// <summary>
         /// Gets the azimuthal quantum number, which represents the zero-based index of the <see cref="Subshell"/>.
         /// </summary>
-        public int AzimuthalQuantumNumber => MathUtilities.GetSubshellIndex(Label);
+        public int AzimuthalQuantumNumber => ChemistryUtils.GetSubshellIndex(Label);
 
         /// <summary>
         /// Gets the electron capacity in the <see cref="Subshell"/>.
         /// </summary>
         public int Capacity => Orbitals.Length*2;
+
+        /// <summary>
+        /// Gets the amount of paired electrons in the <see cref="Subshell"/>.
+        /// </summary>
+        public int PairedElectrons => Orbitals.Count(x => x.IsPaired()) * 2;
+
+        /// <summary>
+        /// Gets the amount of unpaired electrons in the <see cref="Subshell"/>.
+        /// </summary>
+        public int UnpairedElectrons => Orbitals.Count(x => !x.IsPaired());
 
         /// <summary>
         /// Gets the amount of electrons in the <see cref="Subshell"/>.
@@ -114,7 +119,7 @@ namespace nChem
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return $"{Id}{Label}";
+            return $"{ChemistryUtils.GetShellIndex(Parent) + 1}{Label}";
         }
     }
 }

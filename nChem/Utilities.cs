@@ -4,7 +4,78 @@ using System.Linq;
 
 namespace nChem
 {
-    public static class MathUtilities
+    public static class MathUtils
+    {
+        /// <summary>
+        /// Converts the specified prefix to a float value.
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        /// <returns></returns>
+        public static float ToFloat(Prefix prefix)
+        {
+            switch (prefix)
+            {
+                case Prefix.None:
+                    return 1e0f;
+
+                case Prefix.Deka:
+                    return 1e1f;
+
+                case Prefix.Hekto:
+                    return 1e2f;
+
+                case Prefix.Kilo:
+                    return 1e3f;
+
+                case Prefix.Mega:
+                    return 1e6f;
+
+                case Prefix.Giga:
+                    return 1e9f;
+
+                case Prefix.Tera:
+                    return 1e12f;
+
+                case Prefix.Peta:
+                    return 1e15f;
+
+                case Prefix.Exa:
+                    return 1e18f;
+
+                case Prefix.Deci:
+                    return 1e-1f;
+
+                case Prefix.Centi:
+                    return 1e-2f;
+
+                case Prefix.Milli:
+                    return 1e-3f;
+
+                case Prefix.Mikro:
+                    return 1e-6f;
+
+                case Prefix.Nano:
+                    return 1e-9f;
+
+                case Prefix.Piko:
+                    return 1e-12f;
+
+                case Prefix.Femto:
+                    return 1e-15f;
+
+                case Prefix.Atto:
+                    return 1e-18f;
+
+                case Prefix.Zepto:
+                    return 1e-21f;
+
+                default:
+                    return -1;
+            }
+        }
+    }
+
+    public static class ChemistryUtils
     {
         /// <summary>
         /// Gets the characters representing shells within an atom.

@@ -1,29 +1,44 @@
 ﻿namespace nChem
 {
-    /// <summary>
-    /// Represents an SI prefix.
-    /// </summary>
-    public enum SiPrefix
+    public enum Prefix : long
     {
-        Micro = 'µ',
-        Milli = 'm',
-        Kilo = 'k',
-        Deci = 'd',
-        Centi = 'c',
-        Terra = 'T',
-        Giga = 'G',
-        Mega = 'M',
-        Yotta = 'Y',
-        Zetta = 'Z',
-        Exa = 'e',
-        Peta = 'p',
-        Nano = 'n',
-        Pico = 'p',
-        Femto = 'f',
-        Atto = 'a',
-        Zepto = 'z',
-        Yocto = 'y',
         None,
+        Deka,
+        Hekto,
+        Kilo,
+        Mega,
+        Giga,
+        Tera,
+        Peta,
+        Exa,
+        Deci,
+        Centi,
+        Milli,
+        Mikro ,
+        Nano,
+        Piko,
+        Femto,
+        Atto,
+        Zepto,
+    }
+
+    public enum Magnetism
+    {
+        Paramagnetic,
+        Diamagnetic,
+    }
+
+    public enum UnitType
+    {
+        Newton,
+        Millisecond,
+        Second,
+        Minute,
+        Hour,
+        Joule,
+        Calorie,
+        Meter,
+        Inch
     }
 
     /// <summary>

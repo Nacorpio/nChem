@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -12,8 +11,6 @@ namespace nChem
     /// </summary>
     public sealed class Shell
     {
-        private int _electrons;
-
         /// <summary>
         /// Initializes an instance of the <see cref="Shell"/> class.
         /// </summary>
@@ -60,7 +57,7 @@ namespace nChem
         /// <summary>
         /// Gets the zero-based index of the <see cref="Shell"/>.
         /// </summary>
-        public int Index => MathUtilities.ShellLabels.ToList().FindIndex(x => x == Symbol);
+        public int Index => ChemistryUtils.ShellLabels.ToList().FindIndex(x => x == Symbol);
 
         /// <summary>
         /// Gets the maximum amount of electrons that can be stored within the <see cref="Shell"/>.
@@ -79,6 +76,18 @@ namespace nChem
         /// </summary>
         [JsonProperty("electrons")]
         public int Electrons => Subshells.Sum(x => x.Electrons);
+
+        /// <summary>
+        /// Gets the amount of paired electrons within the <see cref="Shell"/>.
+        /// </summary>
+        [JsonProperty("pairedElectrons")]
+        public int PairedElectrons => Subshells.Sum(x => x.PairedElectrons);
+
+        /// <summary>
+        /// Gets the amount of unpaired electrons within the <see cref="Shell"/>.
+        /// </summary>
+        [JsonProperty("unpairedElectrons")]
+        public int UnpairedElectrons => Subshells.Sum(x => x.UnpairedElectrons);
 
         /// <summary>
         /// Gets the subshells of the <see cref="Shell"/>.

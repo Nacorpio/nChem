@@ -55,7 +55,7 @@ namespace nChem
         public ShellConfiguration GetShellConfiguration()
         {
             var shells = new Dictionary<char, int>();
-            int shellCount = MathUtilities.GetShellCount(Element.Electrons);
+            int shellCount = ChemistryUtils.GetShellCount(Element.Electrons);
 
             int electrons = Element.Electrons;
 
@@ -64,8 +64,8 @@ namespace nChem
                 if (electrons == 0)
                     break;
 
-                int capacity = MathUtilities.GetShellCapacity(i);
-                char shell = MathUtilities.ShellLabels[i];
+                int capacity = ChemistryUtils.GetShellCapacity(i);
+                char shell = ChemistryUtils.ShellLabels[i];
 
                 if (!shells.ContainsKey(shell))
                     shells.Add(shell, 0);
@@ -103,6 +103,12 @@ namespace nChem
             return GetShellConfiguration().GetValenceShell().Electrons ==
                    GetShellConfiguration().GetValenceShell().Capacity - 1;
         }
+
+        /// <summary>
+        /// Gets the magnetism of the <see cref="Atom"/>.
+        /// </summary>
+        public Magnetism Magnetism
+            => GetShellConfiguration().UnpairedElectrons > 0 ? Magnetism.Paramagnetic : Magnetism.Diamagnetic;
 
         /// <summary>
         /// Determines whether the <see cref="Atom"/> is an ion.
