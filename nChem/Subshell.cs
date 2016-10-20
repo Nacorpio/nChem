@@ -81,37 +81,33 @@ namespace nChem
 
             int remainingElectrons = n;
 
-            int i = 0;
-            while (remainingElectrons > 0)
+            foreach (var orbital in Orbitals)
             {
-                Orbital orbital = Orbitals[i];
+                if (remainingElectrons <= 0)
+                    break;
 
-                if (remainingElectrons >= 2)
+                if (Orbitals.Length == 1)
                 {
-                    if (Orbitals.Length == 1)
-                    {
-                        orbital.Populate();
-                        orbital.Populate();
+                    orbital.Populate();
+                    orbital.Populate();
 
-                        remainingElectrons -= 2;
-                        i++;
-                    }
-                    else
-                    {
-                        orbital.Populate();
-                        remainingElectrons--;
-
-                        if (orbital[1] != null)
-                            i++;
-                    }
-
+                    remainingElectrons -= 2;
                     continue;
                 }
 
                 orbital.Populate();
                 remainingElectrons--;
+            }
 
-                i++;
+            if (Orbitals.Length <= 1) return;
+
+            foreach (var orbital in Orbitals)
+            {
+                if (remainingElectrons == 0)
+                    break;
+
+                orbital.Populate();
+                remainingElectrons--;
             }
         }
 
