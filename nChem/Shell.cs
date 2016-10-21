@@ -92,7 +92,7 @@ namespace nChem
         /// <summary>
         /// Gets the subshells of the <see cref="Shell"/>.
         /// </summary>
-        public List<Subshell> Subshells { get; }
+        public IList<Subshell> Subshells { get; }
 
         /// <summary>
         /// Gets a subshell with the specified label.

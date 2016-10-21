@@ -163,7 +163,7 @@ namespace nChem
         /// <summary>
         /// Gets the characters representing shells within an atom.
         /// </summary>
-        public static char[] ShellLabels = {'k', 'l', 'm', 'n', 'o', 'p', 'q'};
+        public static char[] ShellLabels = {'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u'};
 
         /// <summary>
         /// Gets the characters representing the labels of subshells inside of a shell.
@@ -236,6 +236,15 @@ namespace nChem
                 result++;
 
             if (electronCount >= 49)
+                result++;
+
+            if (electronCount >= 64)
+                result++;
+
+            if (electronCount >= 81)
+                result++;
+
+            if (electronCount >= 100)
                 result++;
 
             return result;

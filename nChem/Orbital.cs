@@ -57,6 +57,15 @@
         }
 
         /// <summary>
+        /// Fills the <see cref="Orbital"/> with two electrons.
+        /// </summary>
+        public void Fill()
+        {
+            Populate();
+            Populate();
+        }
+
+        /// <summary>
         /// Populates the <see cref="Orbital"/> with an electron.
         /// </summary>
         public void Populate()

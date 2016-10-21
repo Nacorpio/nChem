@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace nChem
 {
@@ -47,7 +48,13 @@ namespace nChem
         /// Gets the element of the <see cref="Atom"/>.
         /// </summary>
         public Element Element { get; }
-        
+
+        /// <summary>
+        /// Gets the magnetism of the <see cref="Atom"/>.
+        /// </summary>
+        public Magnetism Magnetism
+            => GetShellConfiguration().UnpairedElectrons > 0 ? Magnetism.Paramagnetic : Magnetism.Diamagnetic;
+
         /// <summary>
         /// Returns the shells of the <see cref="Element"/>.
         /// </summary>
@@ -103,13 +110,7 @@ namespace nChem
             return GetShellConfiguration().GetValenceShell().Electrons ==
                    GetShellConfiguration().GetValenceShell().Capacity - 1;
         }
-
-        /// <summary>
-        /// Gets the magnetism of the <see cref="Atom"/>.
-        /// </summary>
-        public Magnetism Magnetism
-            => GetShellConfiguration().UnpairedElectrons > 0 ? Magnetism.Paramagnetic : Magnetism.Diamagnetic;
-
+        
         /// <summary>
         /// Determines whether the <see cref="Atom"/> is an ion.
         /// </summary>
@@ -120,35 +121,52 @@ namespace nChem
         }
 
         /// <summary>
-        /// Determines whether the <see cref="Atom"/> has a positive charge.
+        /// Converts the current <see cref="Atom"/> instance to an <see cref="Ion"/>.
         /// </summary>
         /// <returns></returns>
-        public bool HasPositiveCharge()
+        public Ion ToIon()
         {
-            return Electrons < Protons;
-        }
+            if (!IsIon())
+                throw new Exception("The current atom isn't an ion.");
 
-        /// <summary>
-        /// Determines whether the <see cref="Atom"/> has a negative charge.
-        /// </summary>
-        /// <returns></returns>
-        public bool HasNegativeCharge()
-        {
-            return Electrons > Protons;
+            return new Ion(this);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            return Element.Symbol;
+        }
 
-            sb.Append(Element.Symbol);
+        /// <summary>
+        /// Determines whether the left <see cref="Atom"/> instance is equal to the right <see cref="Atom"/> instance.
+        /// </summary>
+        /// <param name="left">The left instance.</param>
+        /// <param name="right">The right instance.</param>
+        /// <returns></returns>
+        public static bool operator ==(Atom left, Atom right)
+        {
+            if (left == null && right == null)
+                return true;
 
-            if (IsIon())
-                sb.Append(HasPositiveCharge() ? "⁺" : "⁻");
+            if (left == null || right == null)
+                return false;
 
-            return sb.ToString();
+            return left.Electrons == right.Electrons &&
+                   left.Protons == right.Protons &&
+                   left.Neutrons == right.Neutrons;
+        }
+
+        /// <summary>
+        /// Determines whether the left <see cref="Atom"/> instance is not equal to the right <see cref="Atom"/>.
+        /// </summary>
+        /// <param name="left">The left instance.</param>
+        /// <param name="right">The right instance.</param>
+        /// <returns></returns>
+        public static bool operator !=(Atom left, Atom right)
+        {
+            return !(left == right);
         }
     }
 }

@@ -13,6 +13,15 @@ namespace nChem
         /// <summary>
         /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
         /// </summary>
+        /// <param name="collection">The collection of shells.</param>
+        public ShellConfiguration(ICollection<Shell> collection)
+        {
+            Shells = collection;
+        }
+
+        /// <summary>
+        /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
+        /// </summary>
         /// <param name="values">An ordered collection of shells.</param>
         public ShellConfiguration(int[] values)
         {
@@ -57,7 +66,7 @@ namespace nChem
         /// <summary>
         /// Gets the shells of the <see cref="ShellConfiguration"/>.
         /// </summary>
-        public Collection<Shell> Shells { get; }
+        public ICollection<Shell> Shells { get; }
 
         /// <summary>
         /// Gets the amount of paired electrons in the <see cref="ShellConfiguration"/>.
@@ -68,6 +77,21 @@ namespace nChem
         /// Gets the amount of unpaired electrons in the <see cref="ShellConfiguration"/>.
         /// </summary>
         public int UnpairedElectrons => Shells.Sum(x => x.UnpairedElectrons);
+
+        /// <summary>
+        /// Returns all the electrons in the <see cref="ShellConfiguration"/>.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Electron> GetElectrons()
+        {
+            return Shells
+                .SelectMany(
+                    x => x.Subshells
+                        .SelectMany(
+                            y => y.Orbitals
+                                .SelectMany(k => k.GetElectrons())))
+                                .Where(x => x != null);
+        }
 
         /// <summary>
         /// Returns the valence shell of the <see cref="ShellConfiguration"/>.

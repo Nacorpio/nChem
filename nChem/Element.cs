@@ -11,11 +11,9 @@ namespace nChem
     {
         [JsonIgnore]
         public static Element
-            Lithium = new Element(3),
-            Iridium = new Element(77),
-            Tungsten = new Element(74),
             Hydrogen = new Element(1),
             Helium = new Element(2),
+            Lithium = new Element(3),
             Beryllium = new Element(4),
             Boron = new Element(5),
             Carbon = new Element(6),
@@ -66,7 +64,39 @@ namespace nChem
             Antimony = new Element(51),
             Tellurium = new Element(52),
             Iodine = new Element(53),
-            Xenon = new Element(54)
+            Xenon = new Element(54),
+            Caesium = new Element(55),
+            Barium = new Element(56),
+            Lanthanum = new Element(57),
+            Cerium = new Element(58),
+            Praseodymium = new Element(59),
+            Neodymium = new Element(60),
+            Promethium = new Element(61),
+            Samarium = new Element(62),
+            Europium = new Element(63),
+            Gadolinium = new Element(64),
+            Terbium = new Element(65),
+            Dysprosium = new Element(66),
+            Holmium = new Element(67),
+            Erbium = new Element(68),
+            Thulium = new Element(69),
+            Ytterbium = new Element(70),
+            Lutetium = new Element(71),
+            Hafnium = new Element(72),
+            Tantalum = new Element(73),
+            Tungsten = new Element(74),
+            Rhenium = new Element(75),
+            Osmium = new Element(76),
+            Iridium = new Element(77),
+            Platinum = new Element(78),
+            Gold = new Element(79),
+            Mercury = new Element(80),
+            Thallium = new Element(81),
+            Lead = new Element(82),
+            Bismuth = new Element(83),
+            Polonium = new Element(84),
+            Astatine = new Element(85),
+            Radon = new Element(86)
             ;
 
         /// <summary>

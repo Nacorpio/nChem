@@ -55,6 +55,7 @@
     <Compile Include="Element.Parse.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Ion.cs" />
     <Compile Include="Subshell.cs" />
     <Compile Include="Orbital.cs" />
     <Compile Include="EnergyLevelCollection.cs" />
