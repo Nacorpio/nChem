@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="nChem.Atom">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAoAEAEAAgAAAAAAAACBCIAIAAAAAACAAA=</HashCode>
+      <FileName>Atom.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Element" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="nChem.Compound">
+    <Position X="7" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAEAABAAAAAgAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Compound.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Stacks" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="nChem.Electron">
+    <Position X="10.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Electron.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="nChem.Element" Collapsed="true">
+    <Position X="1.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JQD8GGQB0AMgY1k0WiUhSqQNgAiDtX0oIgkgkREbCy4=</HashCode>
+      <FileName>Element.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="nChem.Orbital">
+    <Position X="10.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAgAAAAQAAAAACAACAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Orbital.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="this[System.Int32]" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="nChem.Shell">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAABAESBEAAAACAAAAICAIAAEAAAIACAA=</HashCode>
+      <FileName>Shell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="this[System.Char]" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Subshells" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="nChem.ShellConfiguration">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIAAIAAAAAACBAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>ShellConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="this[System.Char]" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Shells" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="nChem.Stack">
+    <Position X="4" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAgAAEAAgAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>Stack.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Element" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="nChem.Subshell">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAEAAAAACECBAAQAACAAAAACAAAAQAAAIAAAA=</HashCode>
+      <FileName>Subshell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Orbitals" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
