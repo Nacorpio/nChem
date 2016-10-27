@@ -48,27 +48,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Atom.cs" />
-    <Compile Include="Compound.cs" />
-    <Compile Include="Electron.cs" />
-    <Compile Include="Element.cs" />
-    <Compile Include="Element.Parse.cs" />
+    <Compile Include="Chemistry\Atom.cs" />
+    <Compile Include="Chemistry\Compound.cs" />
+    <Compile Include="Chemistry\Electron.cs" />
+    <Compile Include="Chemistry\Element.cs" />
+    <Compile Include="Chemistry\Element.Parse.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="Ion.cs" />
-    <Compile Include="Subshell.cs" />
-    <Compile Include="Orbital.cs" />
-    <Compile Include="EnergyLevelCollection.cs" />
+    <Compile Include="Chemistry\Ion.cs" />
+    <Compile Include="Chemistry\Reaction.cs" />
+    <Compile Include="Chemistry\Energy\Subshell.cs" />
+    <Compile Include="Chemistry\Orbital.cs" />
+    <Compile Include="Chemistry\Energy\EnergyLevelCollection.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Units\Prefix.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\UnitRepository.cs" />
+    <Compile Include="Units\UnitValue.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shell.cs" />
-    <Compile Include="ShellConfiguration.cs" />
-    <Compile Include="Stack.cs" />
+    <Compile Include="Chemistry\Energy\Shell.cs" />
+    <Compile Include="Chemistry\Energy\ShellConfiguration.cs" />
+    <Compile Include="Chemistry\Stack.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

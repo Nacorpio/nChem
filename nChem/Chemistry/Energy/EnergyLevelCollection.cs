@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace nChem
+namespace nChem.Chemistry.Energy
 {
     /// <summary>
     /// Represents an energy level configuration within a <see cref="Shell"/>.

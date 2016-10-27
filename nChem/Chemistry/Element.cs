@@ -216,7 +216,7 @@ namespace nChem
         /// Gets the atomic number of the <see cref="Element"/>.
         /// </summary>
         [JsonProperty("atomicNumber")]
-        public int AtomicNumber { get; set; }
+        internal int AtomicNumber { get; set; }
 
         /// <summary>
         /// Gets the atomic weight of the <see cref="Element"/>.
@@ -378,26 +378,24 @@ namespace nChem
 
         #region Operator overloads
 
-        /// <summary>
-        /// Determines whether the left-hand side is equal to the right-hand side.
-        /// </summary>
-        /// <param name="e1">The left-hand operand.</param>
-        /// <param name="e2">The right-hand operand.</param>
-        /// <returns></returns>
-        public static bool operator ==(Element e1, Element e2)
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
         {
-            return e1?.AtomicNumber == e2?.AtomicNumber;
+            return (obj as Element)?.AtomicNumber == AtomicNumber;
         }
 
-        /// <summary>
-        /// Determines whether the left-hand side is not equal to the right-hand side.
-        /// </summary>
-        /// <param name="e1">The left-hand operand.</param>
-        /// <param name="e2">The right-hand operand.</param>
-        /// <returns></returns>
-        public static bool operator !=(Element e1, Element e2)
+        private bool Equals(Element other)
         {
-            return !(e1 == e2);
+            return AtomicNumber == other.AtomicNumber;
+        }
+
+        /// <summary>Serves as the default hash function. </summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return AtomicNumber;
         }
 
         /// <summary>

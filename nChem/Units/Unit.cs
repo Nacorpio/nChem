@@ -1,56 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace nChem.Units
 {
-    public class BaseUnit
+    public class Unit
     {
-        public delegate float UnitCalculatationDelegate(float x, Prefix y = Prefix.None);
-        
         /// <summary>
-        /// Initializes an instance of the <see cref="BaseUnit"/> class.
+        /// Initializes an instance of the <see cref="Unit"/> class.
         /// </summary>
+        /// <param name="name">The name.</param>
         /// <param name="symbol">The symbol.</param>
-        internal BaseUnit(string symbol)
+        internal Unit(string name, string symbol)
         {
-            Converters = new Dictionary<UnitType, UnitCalculatationDelegate>();
+            Name = name;
             Symbol = symbol;
+            Converters = new Dictionary<string, Func<float, UnitRepository.Prefix, float>>();
         }
 
         /// <summary>
-        /// Gets the symbol of the <see cref="BaseUnit"/>.
+        /// Gets the name of the <see cref="Unit"/>.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the symbol of the <see cref="Unit"/>.
         /// </summary>
         public string Symbol { get; }
 
         /// <summary>
-        /// Gets or sets the base value of the <see cref="BaseUnit"/>.
+        /// Gets the converters of the <see cref="Unit"/>.
         /// </summary>
-        public float BaseValue { get; set; }
-
-        /// <summary>
-        /// Gets the converters of the <see cref="BaseUnit"/>.
-        /// </summary>
-        public Dictionary<UnitType, UnitCalculatationDelegate> Converters { get; set; }
-        
-        /// <summary>
-        /// Converts the specified value to a specific <see cref="UnitType"/>.
-        /// </summary>
-        /// <param name="x">The value to convert.</param>
-        /// <param name="targetUnit">The target unit.</param>
-        /// <param name="targetPrefix">The target prefix.</param>
-        /// <returns></returns>
-        public float ConvertTo(float x, UnitType targetUnit, Prefix targetPrefix = Prefix.None)
-        {
-            return Converters[targetUnit](x, targetPrefix);
-        }
-        
-        /// <summary>
-        /// Returns the value of the <see cref="BaseUnit"/>.
-        /// </summary>
-        /// <param name="prefix">The prefix.</param>
-        /// <returns></returns>
-        public float GetValue(Prefix prefix)
-        {
-            return (long) prefix*BaseValue;
-        }
+        public Dictionary<string, Func<float, UnitRepository.Prefix, float>> Converters { get; }
     }
 }

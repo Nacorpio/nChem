@@ -94,62 +94,62 @@ namespace nChem
         /// </summary>
         /// <param name="prefix">The prefix.</param>
         /// <returns></returns>
-        public static float ToFloat(Prefix prefix)
+        public static float ToFloat(PrefixKind prefix)
         {
             switch (prefix)
             {
-                case Prefix.None:
+                case PrefixKind.None:
                     return 1e0f;
 
-                case Prefix.Deka:
+                case PrefixKind.Deka:
                     return 1e1f;
 
-                case Prefix.Hekto:
+                case PrefixKind.Hekto:
                     return 1e2f;
 
-                case Prefix.Kilo:
+                case PrefixKind.Kilo:
                     return 1e3f;
 
-                case Prefix.Mega:
+                case PrefixKind.Mega:
                     return 1e6f;
 
-                case Prefix.Giga:
+                case PrefixKind.Giga:
                     return 1e9f;
 
-                case Prefix.Tera:
+                case PrefixKind.Tera:
                     return 1e12f;
 
-                case Prefix.Peta:
+                case PrefixKind.Peta:
                     return 1e15f;
 
-                case Prefix.Exa:
+                case PrefixKind.Exa:
                     return 1e18f;
 
-                case Prefix.Deci:
+                case PrefixKind.Deci:
                     return 1e-1f;
 
-                case Prefix.Centi:
+                case PrefixKind.Centi:
                     return 1e-2f;
 
-                case Prefix.Milli:
+                case PrefixKind.Milli:
                     return 1e-3f;
 
-                case Prefix.Mikro:
+                case PrefixKind.Mikro:
                     return 1e-6f;
 
-                case Prefix.Nano:
+                case PrefixKind.Nano:
                     return 1e-9f;
 
-                case Prefix.Piko:
+                case PrefixKind.Piko:
                     return 1e-12f;
 
-                case Prefix.Femto:
+                case PrefixKind.Femto:
                     return 1e-15f;
 
-                case Prefix.Atto:
+                case PrefixKind.Atto:
                     return 1e-18f;
 
-                case Prefix.Zepto:
+                case PrefixKind.Zepto:
                     return 1e-21f;
 
                 default:

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace nChem
+namespace nChem.Chemistry.Energy
 {
     /// <summary>
     /// Represents a configuration for the electrons within an <see cref="Atom"/>.
@@ -85,12 +85,10 @@ namespace nChem
         public IEnumerable<Electron> GetElectrons()
         {
             return Shells
-                .SelectMany(
-                    x => x.Subshells
-                        .SelectMany(
-                            y => y.Orbitals
-                                .SelectMany(k => k.GetElectrons())))
-                                .Where(x => x != null);
+                .SelectMany(x => x.Subshells
+                .SelectMany(y => y.Orbitals
+                    .SelectMany(k => k.GetElectrons())))
+                        .Where(x => x != null);
         }
 
         /// <summary>

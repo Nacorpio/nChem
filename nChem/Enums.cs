@@ -1,6 +1,6 @@
 ﻿namespace nChem
 {
-    public enum Prefix : long
+    public enum PrefixKind : long
     {
         None,
         Deka,
@@ -20,6 +20,9 @@
         Femto,
         Atto,
         Zepto,
+        Micro,
+        Zetta,
+        Yotta
     }
 
     public enum Magnetism
@@ -28,17 +31,30 @@
         Diamagnetic,
     }
 
-    public enum UnitType
+    public enum UnitKind
     {
         Newton,
-        Millisecond,
+        Joule,
+        Calorie,
+        HorsePowerMetric,
+        HorsePowerMechanical,
+        Watt,
+        Btu,
+
         Second,
         Minute,
         Hour,
-        Joule,
-        Calorie,
+        Day,
+        Week,
+
+        Inch,
+        Mile,
+        Yard,
+        Feet,
+        Furlong,
+        NauticalMile,
+        LightYear,
         Meter,
-        Inch
     }
 
     /// <summary>

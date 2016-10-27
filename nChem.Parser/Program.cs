@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using nChem.Chemistry;
 
 namespace nChem.Parser
 {
@@ -6,11 +6,13 @@ namespace nChem.Parser
     {
         static void Main(string[] args)
         {
-            var atom = new Atom(Element.Carbon);
-            Shell valenceShell = atom.GetShellConfiguration().GetValenceShell();
+            Compound c = new Compound(new []
+            {
+                new Stack(Element.Nitrogen, 2),
+                new Stack(Element.Oxygen),  
+            });
 
-            ShellConfiguration configuration = atom.GetShellConfiguration();
-            IEnumerable<Electron> electrons = configuration.GetElectrons();
+            var result = c.GetOxidationNumbers();
         }
     }
 }

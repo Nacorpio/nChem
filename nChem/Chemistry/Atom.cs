@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using nChem.Chemistry.Energy;
 
-namespace nChem
+namespace nChem.Chemistry
 {
     /// <summary>
     /// Represents an atom of an <see cref="Element"/>.
     /// </summary>
-    public sealed class Atom
+    public sealed class Atom : IAtomic
     {
         /// <summary>
         /// Initializes an instance of the <see cref="Atom"/> class.
@@ -48,7 +47,7 @@ namespace nChem
         /// Gets the element of the <see cref="Atom"/>.
         /// </summary>
         public Element Element { get; }
-
+        
         /// <summary>
         /// Gets the magnetism of the <see cref="Atom"/>.
         /// </summary>
@@ -91,25 +90,6 @@ namespace nChem
 
             return new ShellConfiguration(shells);
         }
-
-        /// <summary>
-        /// Determines whether the current <see cref="Atom"/> is an alkali metal.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAlkaliMetal()
-        {
-            return GetShellConfiguration().GetValenceShell().Electrons == 1;
-        }
-
-        /// <summary>
-        /// Determines whether the current <see cref="Atom"/> is a halogen.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsHalogen()
-        {
-            return GetShellConfiguration().GetValenceShell().Electrons ==
-                   GetShellConfiguration().GetValenceShell().Capacity - 1;
-        }
         
         /// <summary>
         /// Determines whether the <see cref="Atom"/> is an ion.
@@ -121,15 +101,21 @@ namespace nChem
         }
 
         /// <summary>
-        /// Converts the current <see cref="Atom"/> instance to an <see cref="Ion"/>.
+        /// Returns the atomic weight of the <see cref="Atom"/>.
         /// </summary>
         /// <returns></returns>
-        public Ion ToIon()
+        public float GetAtomicWeight()
         {
-            if (!IsIon())
-                throw new Exception("The current atom isn't an ion.");
+            return Element.AtomicWeight;
+        }
 
-            return new Ion(this);
+        /// <summary>
+        /// Returns the elements in the <see cref="IAtomic"/> implementation.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Element> GetElements()
+        {
+            return new[] {Element};
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
@@ -137,36 +123,6 @@ namespace nChem
         public override string ToString()
         {
             return Element.Symbol;
-        }
-
-        /// <summary>
-        /// Determines whether the left <see cref="Atom"/> instance is equal to the right <see cref="Atom"/> instance.
-        /// </summary>
-        /// <param name="left">The left instance.</param>
-        /// <param name="right">The right instance.</param>
-        /// <returns></returns>
-        public static bool operator ==(Atom left, Atom right)
-        {
-            if (left == null && right == null)
-                return true;
-
-            if (left == null || right == null)
-                return false;
-
-            return left.Electrons == right.Electrons &&
-                   left.Protons == right.Protons &&
-                   left.Neutrons == right.Neutrons;
-        }
-
-        /// <summary>
-        /// Determines whether the left <see cref="Atom"/> instance is not equal to the right <see cref="Atom"/>.
-        /// </summary>
-        /// <param name="left">The left instance.</param>
-        /// <param name="right">The right instance.</param>
-        /// <returns></returns>
-        public static bool operator !=(Atom left, Atom right)
-        {
-            return !(left == right);
         }
     }
 }

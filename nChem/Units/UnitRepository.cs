@@ -1,118 +1,107 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace nChem.Units
 {
-    public static class UnitRepository
+    public static partial class UnitRepository
     {
-        public static Dictionary<UnitType, BaseUnit> Units;
+        public delegate float UnitFunction(float value);
 
-        static UnitRepository()
+        public static Prefix[] Prefixes =
         {
-            Units = new Dictionary<UnitType, BaseUnit>
+            new Prefix("none", ' ', 1e-0f, PrefixKind.None),
+            new Prefix("deci", 'd', 1e-1f, PrefixKind.Deci),
+            new Prefix("centi", 'c', 1e-2f, PrefixKind.Centi),
+            new Prefix("milli", 'm', 1e-3f, PrefixKind.Milli),
+            new Prefix("micro", 'µ', 1e-6f, PrefixKind.Micro),
+            new Prefix("nano", 'n', 1e-9f, PrefixKind.Nano),
+            new Prefix("hecto", 'h', 1e2f, PrefixKind.Hekto),
+            new Prefix("kilo", 'k', 1e3f, PrefixKind.Kilo),
+            new Prefix("mega", 'M', 1e6f, PrefixKind.Mega),
+            new Prefix("giga", 'G', 1e9f, PrefixKind.Giga),
+            new Prefix("tera", 'T', 1e12f, PrefixKind.Tera),
+            new Prefix("peta", 'P', 1e15f, PrefixKind.Peta),
+            new Prefix("exa", 'E', 1e18f, PrefixKind.Exa),
+            new Prefix("zetta", 'Z', 1e21f, PrefixKind.Zetta),
+            new Prefix("yotta", 'Y', 1e24f, PrefixKind.Yotta),
+        };
+
+        public static Dictionary<UnitKind, Dictionary<UnitKind, UnitFunction>> Converters = new Dictionary
+            <UnitKind, Dictionary<UnitKind, UnitFunction>>
             {
                 {
-                    UnitType.Newton,
-                    new BaseUnit("N")
+                    UnitKind.Newton, new Dictionary<UnitKind, UnitFunction>
+                    {
+                        {UnitKind.Newton, f => f},
+                        {UnitKind.Joule, f => 1*f}
+                    }
                 },
+
+                {
+                    UnitKind.Joule, new Dictionary<UnitKind, UnitFunction>
+                    {
+                        {UnitKind.Joule, f => f},
+                        {UnitKind.Newton, f => 1*f},
+                        {UnitKind.Calorie, f => 0.239f*f},
+                        {UnitKind.Btu, f => 0.0009f*f}
+                    }
+                },
+
+                {
+                    UnitKind.Watt, new Dictionary<UnitKind, UnitFunction>
+                    {
+                        {UnitKind.HorsePowerMetric, f => 0.0014f*f}
+                    }
+                },
+
+                {
+                    UnitKind.Meter, new Dictionary<UnitKind, UnitFunction>
+                    {
+                        {UnitKind.Meter, f => 1 * f},
+                        {UnitKind.Inch, f => 39.3701f*f},
+                        {UnitKind.Mile, f => 0.0006f*f},
+                        {UnitKind.Yard, f => 1.0936f*f},
+                        {UnitKind.Feet, f => 3.2808f*f},
+                        {UnitKind.NauticalMile, f => 0.0005f*f},
+                        {UnitKind.Furlong, f => 0.005f*f},
+                        {UnitKind.LightYear, f => 9.4605284e15f*f}
+                    }
+                }
             };
 
-            Units.Add(UnitType.Meter, new BaseUnit("m")
-            {
-                Converters = new Dictionary<UnitType, BaseUnit.UnitCalculatationDelegate>
-                {
-                    {
-                        UnitType.Meter,
-                        (x, y) => MathUtils.ToFloat(y) * x
-                    },
-                }
-            });
+        /// <summary>
+        /// Converts a value of a specific unit to the specified target unit.
+        /// </summary>
+        /// <param name="source">The source unit value.</param>
+        /// <param name="targetUnit">The target unit.</param>
+        /// <param name="targetPrefix">The target prefix.</param>
+        /// <returns></returns>
+        public static decimal Calculate(UnitValue source, UnitKind targetUnit, PrefixKind targetPrefix = PrefixKind.None)
+        {
+            if (!CanConvert(source.Unit, targetUnit))
+                throw new Exception("The specified source unit cannot be converted to the target unit.");
 
-            Units.Add(UnitType.Inch, new BaseUnit("in")
-            {
-                Converters = new Dictionary<UnitType, BaseUnit.UnitCalculatationDelegate>
-                {
-                    {
-                        UnitType.Inch,
-                        (x, y) => MathUtils.ToFloat(y) * x
-                    },
-                    {
-                        UnitType.Meter,
-                        (x, y) => MathUtils.ToFloat(y) * x * 39.3700787f
-                    }
-                }
-            });
+            Prefix prefix = Prefixes
+                .FirstOrDefault(x => x.Kind == targetPrefix) != null
+                    ? Prefixes.First(x => x.Kind == targetPrefix)
+                    : Prefixes.First(x => x.Kind == PrefixKind.None);
 
-            Units.Add(UnitType.Minute, new BaseUnit("min")
-            {
-                Converters = new Dictionary<UnitType, BaseUnit.UnitCalculatationDelegate>
-                {
-                    {
-                        UnitType.Hour,
-                        (x, y) => MathUtils.ToFloat(y) * x / 60
-                    },
-                    {
-                        UnitType.Second,
-                        (x, y) => MathUtils.ToFloat(y) * x * 60
-                    },
-                    {
-                        UnitType.Millisecond,
-                        (x, y) => Units[UnitType.Second].ConvertTo(x * 60, UnitType.Millisecond, y)
-                    }
-                }
-            });
-
-            Units.Add(UnitType.Hour, new BaseUnit("h")
-            {
-                Converters = new Dictionary<UnitType, BaseUnit.UnitCalculatationDelegate>
-                {
-                    {
-                        UnitType.Second,
-                        (x, y) => MathUtils.ToFloat(y) * x * 3.6e3f
-                    },
-                    {
-                        UnitType.Minute,
-                        (x, y) => MathUtils.ToFloat(y) * x * 60
-                    },
-                    {
-                        UnitType.Millisecond,
-                        (x, y) => MathUtils.ToFloat(y) * x * 3.6e3f * 1e3f
-                    }
-                }
-            });
-
-            Units.Add(UnitType.Second, new BaseUnit("s")
-            {
-                Converters = new Dictionary<UnitType, BaseUnit.UnitCalculatationDelegate>
-                {
-                    {
-                        UnitType.Millisecond,
-                        (x, y) => MathUtils.ToFloat(y) * x * 1e3f
-                    },
-                    {
-                        UnitType.Hour,
-                        (x, y) => MathUtils.ToFloat(y) * x / 3.6e3f
-                    },
-                    {
-                        UnitType.Minute,
-                        (x, y) => MathUtils.ToFloat(y) * x / 60
-                    }
-                }
-            });
+            return (decimal) Converters[source.Unit][targetUnit](source.GetValue()) / (decimal) prefix.Multiplier;
         }
 
-        public static BaseUnit Newton => Get(UnitType.Newton);
-        public static BaseUnit Meter => Get(UnitType.Meter);
-        public static BaseUnit Inch => Get(UnitType.Inch);
-        public static BaseUnit Second => Get(UnitType.Second);
-        public static BaseUnit Minute => Get(UnitType.Minute);
-        public static BaseUnit Millisecond => Get(UnitType.Millisecond);
-        public static BaseUnit Hour => Get(UnitType.Hour);
-
         /// <summary>
-        /// Returns a <see cref="BaseUnit"/> with the specified unit type.
+        /// Determines whether the specified unit can be converted to a specific target unit.
         /// </summary>
-        /// <param name="unitType">The unit type.</param>
+        /// <param name="source">The source unit.</param>
+        /// <param name="target">The target unit.</param>
         /// <returns></returns>
-        public static BaseUnit Get(UnitType unitType) => Units[unitType];
+        public static bool CanConvert(UnitKind source, UnitKind target)
+        {
+            if (!Converters.ContainsKey(source))
+                throw new KeyNotFoundException(nameof(source));
+
+            return Converters[source].ContainsKey(target);
+        }
     }
 }
