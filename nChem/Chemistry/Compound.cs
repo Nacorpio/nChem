@@ -95,7 +95,7 @@ namespace nChem.Chemistry
             int target = IsIon() ? new Ion(Stacks.ToArray()).GetCharge() : 0;
 
             var results = new List<int>();
-            var unknown = new List<int>();
+            int? unknown = null;
 
             int i = 0;
             foreach (var stack in Stacks)
@@ -130,7 +130,7 @@ namespace nChem.Chemistry
                         {
                             if (GetElements().Any(x => x.AtomicNumber == 8))
                             {
-                                unknown.Add(i - 1);
+                                unknown = i - 1;
                                 continue;
                             }
 
@@ -154,20 +154,17 @@ namespace nChem.Chemistry
                         continue;
                 }
 
-                unknown.Add(i - 1);
+                unknown = i - 1;
             }
 
-            if (unknown.Count > 0)
+            if (unknown != null)
             {
-                foreach (var index in unknown.ToArray())
-                {
-                    int x = byte.MaxValue;
+                int x = byte.MaxValue;
 
-                    while (x + results.Sum(y => y) != target)
-                        x--;
+                while (x + results.Sum(y => y) != target)
+                    x--;
 
-                    results.Insert(index, x);
-                }
+                results.Insert((int) unknown, x);
             }
 
             numbers = results.ToArray();

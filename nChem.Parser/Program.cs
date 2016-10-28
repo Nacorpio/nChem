@@ -9,8 +9,9 @@ namespace nChem.Parser
         {
             var compound = new Compound(new[]
             {
-                new Stack(Element.Chlorine, 2),
-                new Stack(Element.Oxygen),
+                new Stack(Element.Hydrogen, 2),
+                new Stack(Element.Sulfur),
+                new Stack(Element.Oxygen, 4), 
             });
 
             int[] numbers;
