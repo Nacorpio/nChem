@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 namespace nChem.Chemistry
 {
@@ -84,7 +85,7 @@ namespace nChem.Chemistry
         {
             unchecked
             {
-                return ((Atom != null ? Atom.GetHashCode() : 0) * 397) ^ Size;
+                return ((Atom?.GetHashCode() ?? 0) * 397) ^ Size;
             }
         }
 
@@ -94,10 +95,21 @@ namespace nChem.Chemistry
         {
             var sb = new StringBuilder();
 
-            var atomic = Atom as Compound;
-            if (atomic != null)
-                sb.Append($"{Size}({atomic})");
+            IAtomic atomic = Atom as Compound;
 
+            if (atomic != null)
+            {
+                if (Size == 1)
+                {
+                    sb.Append($"{atomic}");
+                    return sb.ToString();
+                }
+
+                sb.Append($"{Size}({atomic})");
+                return sb.ToString();
+            }
+
+            sb.Append($"{Atom.GetElements().ToArray()[0].Symbol}{(Size == 1 ? string.Empty : Size.ToString())}");
             return sb.ToString();
         }
     }

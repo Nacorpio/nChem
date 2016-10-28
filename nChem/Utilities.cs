@@ -7,6 +7,23 @@ namespace nChem
 {
     public static class FormatUtils
     {
+        public static string[] Metals =
+        {
+            "alkaline-earth-metal",
+            "alkali-metal",
+            "transition-element-actinide",
+            "transition-element-lanthanide",
+            "transition-element-nickel-group",
+            "transition-element-chromium-group",
+            "transition-element-cobalt-group",
+            "transition-element-copper-group",
+            "transition-element-nickel-group",
+            "transition-element-vanadium-group",
+            "transition-element-titanium-group",
+            "transition-element-iron-group",
+            "transition-element-scandium-group"
+        };
+
         public static Dictionary<char, char> Superscripts = new Dictionary<char, char>
         {
             {'⁰', '0'},
@@ -55,7 +72,7 @@ namespace nChem
                     sb.Append(Subscripts[c]);
             }
 
-            return short.Parse(sb.ToString());
+            return Int16.Parse(sb.ToString());
         }
 
         public static short ToInt16(string input)
@@ -73,7 +90,7 @@ namespace nChem
             if (Subscripts.ContainsKey(c))
                 sb.Append(Subscripts[c]);
 
-            return short.Parse(sb.ToString());
+            return Int16.Parse(sb.ToString());
         }
         
         public static int ToInt32(char c)

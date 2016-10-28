@@ -185,6 +185,11 @@ namespace nChem.Chemistry
                     doc.LoadHtml(src);
                     node = doc.DocumentNode;
 
+                    element.Category = node.SelectSingleNode("//*[@id=\"ebody\"]/p[1]").InnerText
+                        .ToLower()
+                        .Replace(' ', '-')
+                        .Replace(":", string.Empty);
+
                     var generalNodes = node.SelectSingleNode("//div[@id='general']").Descendants("tr");
                     var physicalNodes = node.SelectSingleNode("//div[@id='physical']").Descendants("tr");
                     var thermalNodes = node.SelectSingleNode("//div[@id='thermal']").Descendants("tr");

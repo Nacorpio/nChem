@@ -13,9 +13,8 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="left">The left-hand assignment.</param>
         /// <param name="right">The right-hand assignment.</param>
-        public RedoxEquation(Compound left, Compound right) : base(left, right)
-        {
-        }
+        public RedoxEquation(IEnumerable<Stack> left, IEnumerable<Stack> right) : base(left, right)
+        { }
 
         /// <summary>
         /// Balances the <see cref="Equation"/>.
@@ -23,13 +22,13 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public override Equation Balance()
         {
-            var queue = new Queue<Stack>(Left.Stacks);
+            var queue = new Queue<Stack>(Left);
             while (queue.Count > 0)
             {
                 Stack current = queue.Peek();
             }
 
-            queue = new Queue<Stack>(Right.Stacks);
+            queue = new Queue<Stack>(Right);
             while (queue.Count > 0)
             {
                 Stack current = queue.Peek();
@@ -49,7 +48,7 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="left">The left-hand assignment.</param>
         /// <param name="right">The right-hand assignment.</param>
-        protected Equation(Compound left, Compound right)
+        protected Equation(IEnumerable<Stack> left, IEnumerable<Stack> right)
         {
             Left = left;
             Right = right;
@@ -58,12 +57,12 @@ namespace nChem.Chemistry
         /// <summary>
         /// Gets the left-hand assignment of the <see cref="Equation"/>.
         /// </summary>
-        public Compound Left { get; }
+        public IEnumerable<Stack> Left { get; }
 
         /// <summary>
         /// Gets the right-hand assignment of the <see cref="Equation"/>.
         /// </summary>
-        public Compound Right { get; }
+        public IEnumerable<Stack> Right { get; }
 
         /// <summary>
         /// Balances the <see cref="Equation"/>.

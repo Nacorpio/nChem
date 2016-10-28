@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -91,10 +90,88 @@ namespace nChem.Chemistry
         /// Returns the oxidation number of the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
-        public int[] GetOxidationNumbers()
+        public bool TryGetOxidationNumbers(out int[] numbers)
         {
             int target = IsIon() ? new Ion(Stacks.ToArray()).GetCharge() : 0;
-            throw new NotImplementedException();
+
+            var results = new List<int>();
+            var unknown = new List<int>();
+
+            int i = 0;
+            foreach (var stack in Stacks)
+            {
+                i++;
+
+                var compound = stack.Atom as Compound;
+                if (compound != null)
+                {
+                    int[] cn;
+                    if (compound.TryGetOxidationNumbers(out cn))
+                        results.AddRange(cn);
+
+                    continue;
+                }
+
+                var atom = stack.Atom as Atom;
+                if (atom == null)
+                    continue;
+
+                switch (atom.Element.Group)
+                {
+                    case 1:
+                        results.Add(1 * stack.Size);
+                        continue;
+
+                    case 2:
+                        results.Add(2 * stack.Size);
+                        continue;
+
+                    case 17:
+                        {
+                            if (GetElements().Any(x => x.AtomicNumber == 8))
+                            {
+                                unknown.Add(i - 1);
+                                continue;
+                            }
+
+                            results.Add(-1 * stack.Size);
+                            continue;
+                        }
+                }
+
+                switch (atom.Element.AtomicNumber)
+                {
+                    case 1:
+                        results.Add(GetElements().Any(x => x.IsMetal) ? -1 : 1 * stack.Size);
+                        continue;
+
+                    case 8:
+                        results.Add(-2 * stack.Size);
+                        continue;
+
+                    case 9:
+                        results.Add(-1 * stack.Size);
+                        continue;
+                }
+
+                unknown.Add(i - 1);
+            }
+
+            if (unknown.Count > 0)
+            {
+                foreach (var index in unknown.ToArray())
+                {
+                    int x = byte.MaxValue;
+
+                    while (x + results.Sum(y => y) != target)
+                        x--;
+
+                    results.Insert(index, x);
+                }
+            }
+
+            numbers = results.ToArray();
+            return numbers.Sum(x => x) == target;
         }
 
         /// <summary>
@@ -112,15 +189,11 @@ namespace nChem.Chemistry
         public override bool Equals(object obj)
         {
             var other = obj as Compound;
+
             if (other == null)
                 return false;
 
             return other.Stacks.SequenceEqual(Stacks);
-        }
-
-        protected bool Equals(Compound other)
-        {
-            return Equals(Stacks, other.Stacks);
         }
 
         /// <summary>Serves as the default hash function. </summary>

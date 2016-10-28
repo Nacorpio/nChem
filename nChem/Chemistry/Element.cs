@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -103,6 +104,8 @@ namespace nChem.Chemistry
 
         #endregion
 
+        
+
         /// <summary>
         /// Initializes an instance of the <see cref="Element"/> class.
         /// </summary>
@@ -138,6 +141,11 @@ namespace nChem.Chemistry
         { }
 
         #region Properties
+
+        /// <summary>
+        /// Gets a value indicating if the <see cref="Element"/> is a metal.
+        /// </summary>
+        public bool IsMetal => FormatUtils.Metals.Contains(Category);
 
         /// <summary>
         /// Gets the mass number of the <see cref="Element"/>.
@@ -389,7 +397,10 @@ namespace nChem.Chemistry
         public static Element Create(int atomicNumber)
         {
             if (Element.GetElements() == null || Element.GetElements().Count == 0)
+            {
                 Element.FetchPeriodni();
+                File.WriteAllText("elements.json", JsonConvert.SerializeObject(Element.GetElements(), Formatting.Indented));
+            }
 
             Element result = new Element(atomicNumber);
             Element element = Element.GetElements()?

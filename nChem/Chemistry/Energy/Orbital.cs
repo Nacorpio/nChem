@@ -1,4 +1,6 @@
-﻿namespace nChem
+﻿using nChem.Chemistry.Particles;
+
+namespace nChem.Chemistry.Energy
 {
     /// <summary>
     /// Represents an orbit/path with a maximum amount of two electrons.

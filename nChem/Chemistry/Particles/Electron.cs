@@ -1,4 +1,4 @@
-namespace nChem
+namespace nChem.Chemistry.Particles
 {
     public sealed class Electron
     {
