@@ -41,7 +41,7 @@ namespace nChem.Chemistry
         /// Returns the total atomic weight of the <see cref="Stack"/>.
         /// </summary>
         /// <returns></returns>
-        public float GetAtomicWeight()
+        public float? GetAtomicWeight()
         {
             return Atom.GetAtomicWeight() * Size;
         }

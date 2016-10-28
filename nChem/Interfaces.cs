@@ -19,7 +19,7 @@ namespace nChem
         /// Returns the atomic weight of the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
-        float GetAtomicWeight();
+        float? GetAtomicWeight();
 
         /// <summary>
         /// Gets the electron amount of the <see cref="IAtomic"/> implementation.
@@ -40,7 +40,7 @@ namespace nChem
         /// Returns the elements in the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Element> GetElements();
+        IEnumerable<Chemistry.Element> GetElements();
     }
 
     /// <summary>

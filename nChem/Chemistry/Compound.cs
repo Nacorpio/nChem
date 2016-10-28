@@ -8,7 +8,7 @@ namespace nChem.Chemistry
     /// <summary>
     /// Represents a compound of atoms.
     /// </summary>
-    public class Compound : IAtomic
+    public sealed class Compound : IAtomic
     {
         /// <summary>
         /// Initializes an instance of the <see cref="Compound"/> class.
@@ -40,10 +40,37 @@ namespace nChem.Chemistry
         public int Neutrons => Stacks.Sum(x => x.Size * x.Atom.Neutrons);
 
         /// <summary>
+        /// Converts a specific array of <see cref="Element"/> to a compound.
+        /// </summary>
+        /// <param name="elements">The elements to convert.</param>
+        public static implicit operator Compound(Element[] elements)
+        {
+            return new Compound(elements.Select(x => new Stack(x)));
+        }
+
+        /// <summary>
+        /// Converts a specific array of <see cref="Atom"/> to a compound.
+        /// </summary>
+        /// <param name="atoms">The atoms to convert.</param>
+        public static implicit operator Compound(Atom[] atoms)
+        {
+            return new Compound(atoms.Select(x => new Stack(x)));
+        }
+
+        /// <summary>
+        /// Converts a specific array of <see cref="Stack"/> to a compound.
+        /// </summary>
+        /// <param name="stacks">The stacks to convert.</param>
+        public static implicit operator Compound(Stack[] stacks)
+        {
+            return new Compound(stacks);
+        }
+
+        /// <summary>
         /// Returns the total atomic weight of the <see cref="Compound"/>.
         /// </summary>
         /// <returns></returns>
-        public float GetAtomicWeight()
+        public float? GetAtomicWeight()
         {
             return Stacks
                 .Sum(x => x.GetAtomicWeight());
@@ -77,6 +104,30 @@ namespace nChem.Chemistry
         public bool IsIon()
         {
             return Protons != Electrons;
+        }
+
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
+        {
+            var other = obj as Compound;
+            if (other == null)
+                return false;
+
+            return other.Stacks.SequenceEqual(Stacks);
+        }
+
+        protected bool Equals(Compound other)
+        {
+            return Equals(Stacks, other.Stacks);
+        }
+
+        /// <summary>Serves as the default hash function. </summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return Stacks?.GetHashCode() ?? 0;
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

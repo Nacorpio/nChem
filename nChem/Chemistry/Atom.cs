@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using nChem.Chemistry.Energy;
 
 namespace nChem.Chemistry
@@ -21,11 +22,25 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
+        /// Initializes an instance of teh <see cref="Atom"/> class.
+        /// </summary>
+        /// <param name="element">The element of the atom.</param>
+        /// <param name="charge">The charge of the atom.</param>
+        public Atom(Element element, int charge = 0)
+            : this(element)
+        {
+            if (Electrons + (-charge) < 0)
+                throw new ArgumentOutOfRangeException(nameof(charge), "The amount of electrons inside an atom can't be less than zero.");
+
+            Electrons += -charge;
+        }
+
+        /// <summary>
         /// Initializes an instance of the <see cref="Atom"/> class.
         /// </summary>
         /// <param name="atomicNumber">The atomic number of the element.</param>
         public Atom(int atomicNumber)
-            : this(new Element(atomicNumber))
+            : this(Element.Create(atomicNumber))
         { }
 
         /// <summary>
@@ -90,7 +105,19 @@ namespace nChem.Chemistry
 
             return new ShellConfiguration(shells);
         }
-        
+
+        /// <summary>
+        /// Converts the current <see cref="Atom"/> instance to an ion.
+        /// </summary>
+        /// <returns></returns>
+        public Ion ToIon()
+        {
+            if (!IsIon())
+                throw new Exception("Can't convert an uncharged atom to an ion.");
+
+            return new Ion(new []{new Stack(this)});
+        }
+
         /// <summary>
         /// Determines whether the <see cref="Atom"/> is an ion.
         /// </summary>
@@ -104,7 +131,7 @@ namespace nChem.Chemistry
         /// Returns the atomic weight of the <see cref="Atom"/>.
         /// </summary>
         /// <returns></returns>
-        public float GetAtomicWeight()
+        public float? GetAtomicWeight()
         {
             return Element.AtomicWeight;
         }
@@ -116,6 +143,36 @@ namespace nChem.Chemistry
         public IEnumerable<Element> GetElements()
         {
             return new[] {Element};
+        }
+
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
+        {
+            var other = obj as Atom;
+
+            if (other == null)
+                return false;
+
+            return Element.AtomicNumber == other.Element.AtomicNumber
+                    && Electrons == other.Electrons
+                    && Protons == other.Protons
+                    && Neutrons == other.Neutrons;
+        }
+
+        /// <summary>Serves as the default hash function. </summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Electrons;
+                hashCode = (hashCode*397) ^ Neutrons;
+                hashCode = (hashCode*397) ^ Protons;
+                hashCode = (hashCode*397) ^ (Element?.GetHashCode() ?? 0);
+                return hashCode;
+            }
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

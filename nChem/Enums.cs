@@ -1,4 +1,6 @@
-﻿namespace nChem
+﻿using nChem.Chemistry;
+
+namespace nChem
 {
     public enum PrefixKind : long
     {
@@ -80,7 +82,7 @@
     }
 
     /// <summary>
-    /// Represents an <see cref="Element"/> category.
+    /// Represents an <see cref="Chemistry.Element"/> category.
     /// </summary>
     public enum ElementCategory
     {

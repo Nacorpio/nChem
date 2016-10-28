@@ -1,20 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical" MembersFormat="FullSignature">
-  <Class Name="nChem.Atom">
-    <Position X="10" Y="0.5" Width="3.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAICQAQAAgAEAEAAgAAAAAAEAABCIAIAAAAAACAAA=</HashCode>
-      <FileName>Chemistry\Atom.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="nChem.Compound" Collapsed="true">
-    <Position X="5.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAEAAAAAAAAAAAEAABAAAAAgAABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Chemistry\Compound.cs</FileName>
-    </TypeIdentifier>
-  </Class>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="nChem.Electron" Collapsed="true">
     <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -25,7 +10,7 @@
   <Class Name="nChem.Element" Collapsed="true">
     <Position X="0.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>Pwj+GORB1AMkY1k0WiUhSrQNpJiDtX0pIikokRE7Cy8=</HashCode>
+      <HashCode>Pwj+GORB1AMkY1k02iUhSrQNpJiDtf0pIikokRE7CS8=</HashCode>
       <FileName>Chemistry\Element.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -43,7 +28,7 @@
       <FileName>Extensions.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="nChem.Ion" Collapsed="true">
+  <Class Name="nChem.Chemistry.Ion" Collapsed="true">
     <Position X="7.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAIAAAQAAAAAAAAAAAQAAAgEAAAABAgAAEAAAQAAA=</HashCode>
@@ -72,7 +57,7 @@
       <FileName>Chemistry\Energy\ShellConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="nChem.Stack" Collapsed="true">
+  <Class Name="nChem.Chemistry.Stack" Collapsed="true">
     <Position X="7.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAABAAAAgAAEgAAAAAQAAAAAAIAAAAAAAAAAAAA=</HashCode>
@@ -107,13 +92,6 @@
       <FileName>Utilities.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="nChem.Units.BaseUnit" Collapsed="true">
-    <Position X="2.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AICAAAAAIAAAAAAAAAAAAAAAAAAAACAAAAAAAAAACAA=</HashCode>
-      <FileName>Units\Unit.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="nChem.Units.UnitRepository" Collapsed="true">
     <Position X="2.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
@@ -139,13 +117,6 @@
     <Position X="4" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAEAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Enums.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="nChem.UnitType" Collapsed="true">
-    <Position X="0.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAACAAAAAAEAAAAIAAAAAAGIAgAAABCAAAAA=</HashCode>
       <FileName>Enums.cs</FileName>
     </TypeIdentifier>
   </Enum>

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace nChem
+namespace nChem.Chemistry.Energy
 {
     public sealed class Subshell
     {

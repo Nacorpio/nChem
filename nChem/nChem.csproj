@@ -59,7 +59,6 @@
     <Compile Include="Chemistry\Reaction.cs" />
     <Compile Include="Chemistry\Energy\Subshell.cs" />
     <Compile Include="Chemistry\Orbital.cs" />
-    <Compile Include="Chemistry\Energy\EnergyLevelCollection.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Units\Prefix.cs" />
     <Compile Include="Units\Unit.cs" />

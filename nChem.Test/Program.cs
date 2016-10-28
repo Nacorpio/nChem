@@ -6,7 +6,6 @@ namespace nChem.Test
     {
         static void Main(string[] args)
         {
-            var elements = Element.Parse(File.ReadAllText("elements.json"));
         }
     }
 }

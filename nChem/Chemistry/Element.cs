@@ -2,102 +2,106 @@
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace nChem
+namespace nChem.Chemistry
 {
     /// <summary>
     /// Represents a chemical element.
     /// </summary>
     public sealed partial class Element
     {
+        #region Elements
+
         [JsonIgnore]
         public static Element
-            Hydrogen = new Element(1),
-            Helium = new Element(2),
-            Lithium = new Element(3),
-            Beryllium = new Element(4),
-            Boron = new Element(5),
-            Carbon = new Element(6),
-            Nitrogen = new Element(7),
-            Oxygen = new Element(8),
-            Fluorine = new Element(9),
-            Neon = new Element(10),
-            Sodium = new Element(11),
-            Magnesium = new Element(12),
-            Aluminium = new Element(13),
-            Silicon = new Element(14),
-            Phosphorus = new Element(15),
-            Sulfur = new Element(16),
-            Chlorine = new Element(17),
-            Argon = new Element(18),
-            Potassium = new Element(19),
-            Calcium = new Element(20),
-            Scandium = new Element(21),
-            Titanium = new Element(22),
-            Vanadium = new Element(23),
-            Chromium = new Element(24),
-            Manganese = new Element(25),
-            Iron = new Element(26),
-            Cobalt = new Element(27),
-            Nickel = new Element(28),
-            Copper = new Element(29),
-            Zinc = new Element(30),
-            Gallium = new Element(31),
-            Germanium = new Element(32),
-            Arsenic = new Element(33),
-            Selenium = new Element(34),
-            Bromine = new Element(35),
-            Krypton = new Element(36),
-            Rubidium = new Element(37),
-            Strontium = new Element(38),
-            Yttrium = new Element(39),
-            Zirconium = new Element(40),
-            Niobium = new Element(41),
-            Molybdenum = new Element(42),
-            Technetium = new Element(43),
-            Ruthenium = new Element(44),
-            Rhodium = new Element(45),
-            Palladium = new Element(46),
-            Silver = new Element(47),
-            Cadmium = new Element(48),
-            Indium = new Element(49),
-            Tin = new Element(50),
-            Antimony = new Element(51),
-            Tellurium = new Element(52),
-            Iodine = new Element(53),
-            Xenon = new Element(54),
-            Caesium = new Element(55),
-            Barium = new Element(56),
-            Lanthanum = new Element(57),
-            Cerium = new Element(58),
-            Praseodymium = new Element(59),
-            Neodymium = new Element(60),
-            Promethium = new Element(61),
-            Samarium = new Element(62),
-            Europium = new Element(63),
-            Gadolinium = new Element(64),
-            Terbium = new Element(65),
-            Dysprosium = new Element(66),
-            Holmium = new Element(67),
-            Erbium = new Element(68),
-            Thulium = new Element(69),
-            Ytterbium = new Element(70),
-            Lutetium = new Element(71),
-            Hafnium = new Element(72),
-            Tantalum = new Element(73),
-            Tungsten = new Element(74),
-            Rhenium = new Element(75),
-            Osmium = new Element(76),
-            Iridium = new Element(77),
-            Platinum = new Element(78),
-            Gold = new Element(79),
-            Mercury = new Element(80),
-            Thallium = new Element(81),
-            Lead = new Element(82),
-            Bismuth = new Element(83),
-            Polonium = new Element(84),
-            Astatine = new Element(85),
-            Radon = new Element(86)
+            Hydrogen = Create(1),
+            Helium = Create(2),
+            Lithium = Create(3),
+            Beryllium = Create(4),
+            Boron = Create(5),
+            Carbon = Create(6),
+            Nitrogen = Create(7),
+            Oxygen = Create(8),
+            Fluorine = Create(9),
+            Neon = Create(10),
+            Sodium = Create(11),
+            Magnesium = Create(12),
+            Aluminium = Create(13),
+            Silicon = Create(14),
+            Phosphorus = Create(15),
+            Sulfur = Create(16),
+            Chlorine = Create(17),
+            Argon = Create(18),
+            Potassium = Create(19),
+            Calcium = Create(20),
+            Scandium = Create(21),
+            Titanium = Create(22),
+            Vanadium = Create(23),
+            Chromium = Create(24),
+            Manganese = Create(25),
+            Iron = Create(26),
+            Cobalt = Create(27),
+            Nickel = Create(28),
+            Copper = Create(29),
+            Zinc = Create(30),
+            Gallium = Create(31),
+            Germanium = Create(32),
+            Arsenic = Create(33),
+            Selenium = Create(34),
+            Bromine = Create(35),
+            Krypton = Create(36),
+            Rubidium = Create(37),
+            Strontium = Create(38),
+            Yttrium = Create(39),
+            Zirconium = Create(40),
+            Niobium = Create(41),
+            Molybdenum = Create(42),
+            Technetium = Create(43),
+            Ruthenium = Create(44),
+            Rhodium = Create(45),
+            Palladium = Create(46),
+            Silver = Create(47),
+            Cadmium = Create(48),
+            Indium = Create(49),
+            Tin = Create(50),
+            Antimony = Create(51),
+            Tellurium = Create(52),
+            Iodine = Create(53),
+            Xenon = Create(54),
+            Caesium = Create(55),
+            Barium = Create(56),
+            Lanthanum = Create(57),
+            Cerium = Create(58),
+            Praseodymium = Create(59),
+            Neodymium = Create(60),
+            Promethium = Create(61),
+            Samarium = Create(62),
+            Europium = Create(63),
+            Gadolinium = Create(64),
+            Terbium = Create(65),
+            Dysprosium = Create(66),
+            Holmium = Create(67),
+            Erbium = Create(68),
+            Thulium = Create(69),
+            Ytterbium = Create(70),
+            Lutetium = Create(71),
+            Hafnium = Create(72),
+            Tantalum = Create(73),
+            Tungsten = Create(74),
+            Rhenium = Create(75),
+            Osmium = Create(76),
+            Iridium = Create(77),
+            Platinum = Create(78),
+            Gold = Create(79),
+            Mercury = Create(80),
+            Thallium = Create(81),
+            Lead = Create(82),
+            Bismuth = Create(83),
+            Polonium = Create(84),
+            Astatine = Create(85),
+            Radon = Create(86)
             ;
+
+        #endregion
 
         /// <summary>
         /// Initializes an instance of the <see cref="Element"/> class.
@@ -124,42 +128,7 @@ namespace nChem
         /// <param name="atomicNumber">The atomic number of the element.</param>
         public Element(int atomicNumber)
         {
-            if (GetElements() == null || GetElements().Count == 0)
-                FetchPeriodni();
-
-            Element element = GetElements()?.FirstOrDefault(x => x.AtomicNumber == atomicNumber);
-            if (element == null)
-                return;
-
-            Group = element.Group;
-            Block = element.Block;
-            Period = element.Period;
-            Category = element.Category;
-            Name = element.Name;
-            Symbol = element.Symbol;
-            AtomicNumber = element.AtomicNumber;
-            AtomicWeight = element.AtomicWeight;
-            ElectronConfiguration = element.ElectronConfiguration;
-            MeltingPoint = element.MeltingPoint;
-            BoilingPoint = element.BoilingPoint;
-            Density = element.Density;
-            LiquidDensity = element.LiquidDensity;
-            HeatOfVaporization = element.HeatOfVaporization;
-            HeatOfFusion = element.HeatOfFusion;
-            HeatOfAtomization = element.HeatOfAtomization;
-            FirstIonizationEnergy = element.FirstIonizationEnergy;
-            SecondIonizationEnergy = element.SecondIonizationEnergy;
-            ThirdIonizationEnergy = element.ThirdIonizationEnergy;
-            AtomicRadius = element.AtomicRadius;
-            MolarHeatCapacity = element.MolarHeatCapacity;
-            AbundanceInAtmosphere = element.AbundanceInAtmosphere;
-            AbundanceInEarth = element.AbundanceInEarth;
-            AbundanceInOceans = element.AbundanceInOceans;
-            CrystalStructure = element.CrystalStructure;
-            SpaceGroup = element.SpaceGroup;
-            MolarVolume = element.MolarVolume;
-            UnitCellDimensions = element.UnitCellDimensions;
-            Electronegativity = element.Electronegativity;
+            AtomicNumber = atomicNumber;
         }
 
         /// <summary>
@@ -174,7 +143,7 @@ namespace nChem
         /// Gets the mass number of the <see cref="Element"/>.
         /// </summary>
         [JsonProperty("massNumber")]
-        public int MassNumber => (int) Math.Round(AtomicWeight);
+        public int MassNumber => (int) Math.Round(AtomicWeight ?? default(float));
 
         /// <summary>
         /// Gets the periodic group of the <see cref="Element"/>.
@@ -216,13 +185,13 @@ namespace nChem
         /// Gets the atomic number of the <see cref="Element"/>.
         /// </summary>
         [JsonProperty("atomicNumber")]
-        internal int AtomicNumber { get; set; }
+        public int AtomicNumber { get; set; }
 
         /// <summary>
         /// Gets the atomic weight of the <see cref="Element"/>.
         /// </summary>
         [JsonProperty("atomicWeight")]
-        public float AtomicWeight { get; set; }
+        public float? AtomicWeight { get; set; }
 
         /// <summary>
         /// Gets the electron configuration of the <see cref="Element"/>.
@@ -386,11 +355,6 @@ namespace nChem
             return (obj as Element)?.AtomicNumber == AtomicNumber;
         }
 
-        private bool Equals(Element other)
-        {
-            return AtomicNumber == other.AtomicNumber;
-        }
-
         /// <summary>Serves as the default hash function. </summary>
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
@@ -406,7 +370,7 @@ namespace nChem
         /// <returns></returns>
         public static Element operator +(Element e1, Element e2)
         {
-            return new Element(e1.AtomicNumber + e2.AtomicNumber);
+            return Element.Create(e1.AtomicNumber + e2.AtomicNumber);
         }
 
         /// <summary>
@@ -417,33 +381,77 @@ namespace nChem
         /// <returns></returns>
         public static Element operator -(Element e1, Element e2)
         {
-            return new Element(e1.AtomicNumber - e2.AtomicNumber);
+            return Element.Create(e1.AtomicNumber - e2.AtomicNumber);
         }
 
         #endregion
 
-        /// <summary>
-        /// Returns the right neighbour of the current <see cref="Element"/> instance.
-        /// </summary>
-        /// <returns></returns>
-        public Element GetRightNeighbour()
+        public static Element Create(int atomicNumber)
         {
-            if (AtomicNumber + 1 > GetMaxAtomicNumber())
-                throw new IndexOutOfRangeException();
+            if (Element.GetElements() == null || Element.GetElements().Count == 0)
+                Element.FetchPeriodni();
 
-            return new Element(AtomicNumber + 1);
+            Element result = new Element(atomicNumber);
+            Element element = Element.GetElements()?
+                .FirstOrDefault(x => x.AtomicNumber == atomicNumber);
+
+            if (element == null)
+                throw new NullReferenceException();
+
+            result.Group = element.Group;
+            result.Block = element.Block;
+            result.Period = element.Period;
+            result.Category = element.Category;
+            result.Name = element.Name;
+            result.Symbol = element.Symbol;
+            result.AtomicWeight = element.AtomicWeight;
+            result.ElectronConfiguration = element.ElectronConfiguration;
+            result.MeltingPoint = element.MeltingPoint;
+            result.BoilingPoint = element.BoilingPoint;
+            result.Density = element.Density;
+            result.LiquidDensity = element.LiquidDensity;
+            result.HeatOfVaporization = element.HeatOfVaporization;
+            result.HeatOfFusion = element.HeatOfFusion;
+            result.HeatOfAtomization = element.HeatOfAtomization;
+            result.FirstIonizationEnergy = element.FirstIonizationEnergy;
+            result.SecondIonizationEnergy = element.SecondIonizationEnergy;
+            result.ThirdIonizationEnergy = element.ThirdIonizationEnergy;
+            result.AtomicRadius = element.AtomicRadius;
+            result.MolarHeatCapacity = element.MolarHeatCapacity;
+            result.AbundanceInAtmosphere = element.AbundanceInAtmosphere;
+            result.AbundanceInEarth = element.AbundanceInEarth;
+            result.AbundanceInOceans = element.AbundanceInOceans;
+            result.CrystalStructure = element.CrystalStructure;
+            result.SpaceGroup = element.SpaceGroup;
+            result.MolarVolume = element.MolarVolume;
+            result.UnitCellDimensions = element.UnitCellDimensions;
+            result.Electronegativity = element.Electronegativity;
+
+            return result;
         }
 
         /// <summary>
-        /// Returns the left neighbour of the current <see cref="Element"/> instance.
+        /// Returns the right neighbor of the current <see cref="Element"/> instance.
         /// </summary>
         /// <returns></returns>
-        public Element GetLeftNeighbour()
+        public Element GetRightNeighbor()
+        {
+            if (AtomicNumber + 1 > Element.GetMaxAtomicNumber())
+                throw new IndexOutOfRangeException();
+
+            return Element.Create(AtomicNumber + 1);
+        }
+
+        /// <summary>
+        /// Returns the left neighbor of the current <see cref="Element"/> instance.
+        /// </summary>
+        /// <returns></returns>
+        public Element GetLeftNeighbor()
         {
             if (AtomicNumber - 1 < 1)
                 throw new IndexOutOfRangeException();
 
-            return new Element(AtomicNumber - 1);
+            return Element.Create(AtomicNumber - 1);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

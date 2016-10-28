@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 
-namespace nChem
+namespace nChem.Chemistry
 {
     public partial class Element
     {
-        private static Collection<Element> _cachedElements;
+        private static List<Element> _cachedElements;
 
         /// <summary>
         /// Parses a collection of elements from the specified JSON-formatted string.
@@ -28,15 +29,78 @@ namespace nChem
         /// <returns></returns>
         public static IEnumerable<Element> Parse()
         {
-            return new Collection<Element>(Parse(File.ReadAllText("elements.json")).ToList());
+            return Parse(File.ReadAllText("elements.json"));
+        }
+
+        public static void FetchLenntech()
+        {
+            var results = new List<Element>();
+            if (File.Exists("elements.json"))
+            {
+                _cachedElements = new List<Element>(Parse());
+                return;
+            }
+
+            using (var wc = new WebClient())
+            {
+                const string elementsUrl = "http://www.lenntech.com/periodic-chart-elements/atomic-mass.htm";
+                const string elementsPath = "*//tr/td/a[@href]/parent::node()/parent::node()";
+
+                string src = wc.DownloadString(elementsUrl);
+                var doc = new HtmlDocument();
+
+                doc.LoadHtml(src);
+
+                HtmlNode root = doc.DocumentNode;
+                HtmlNodeCollection query = root.SelectNodes(elementsPath);
+
+                var nodes = new List<HtmlNode>(query);
+                foreach (var node in nodes)
+                {
+                    IEnumerable<HtmlNode> all = node.ChildNodes
+                        .Where(x => x.Name != "#text").ToList();
+
+                    IEnumerable<HtmlNode> td = all
+                        .Where(x => x.Name == "td")
+                        .Where(x => x.HasAttributes)
+                        .Where(x => x.Attributes.Contains("class"));
+
+                    HtmlNode align = all
+                        .FirstOrDefault(x => x.Attributes.Contains("class"));
+
+                    if (align == null)
+                        throw new Exception("Couldn't parse the atomic number.");
+
+                    List<HtmlNode> properties = td.ToList();
+
+                    string url = properties.Count == 5 ? properties[2].FirstChild.Attributes["href"].Value : properties[1].FirstChild.Attributes["href"].Value;
+                    string name = properties.Count == 5 ? properties[2].InnerText : properties[1].InnerText;
+                    string symbol = properties.Count == 5 ? properties[3].InnerText : properties[2].InnerText;
+
+                    float? weight;
+
+                    if (!string.IsNullOrWhiteSpace(properties[0].InnerText))
+                        weight = float.Parse(properties.Count == 5 ? properties[1].InnerText : properties[0].InnerText);
+                    else
+                        weight = null;
+
+                    results.Add(new Element(int.Parse(properties[properties.Count - 1].InnerText))
+                    {
+                        Name = name,
+                        Symbol = symbol,
+                        AtomicWeight = weight,
+                    });
+                }
+            }
+            _cachedElements = results;
         }
 
         public static void FetchScienceIl()
         {
-            var results = new Collection<Element>();
+            var results = new List<Element>();
             if (File.Exists("elements.json"))
             {
-                _cachedElements = new Collection<Element>(Parse().ToList());
+                _cachedElements = new List<Element>(Parse());
                 return;
             }
 
@@ -58,10 +122,9 @@ namespace nChem
 
                 foreach (var node in xPathQuery)
                 {
-                    Element element = new Element();
+                    Chemistry.Element element = new Chemistry.Element();
                     HtmlNode[] properties = node.Elements("td").ToArray();
 
-                    element.AtomicNumber = int.Parse(properties[0].InnerText);
                     element.AtomicWeight = float.Parse(properties[2].InnerText);
                     element.Name = properties[3].InnerText;
                     element.Symbol = properties[4].InnerText;
@@ -76,8 +139,7 @@ namespace nChem
                 }
             }
 
-            _cachedElements = new Collection<Element>();
-            _cachedElements = results;
+            _cachedElements = new List<Element>(results);
         }
 
         /// <summary>
@@ -86,10 +148,10 @@ namespace nChem
         /// <returns></returns>
         public static void FetchPeriodni()
         {
-            var results = new Collection<Element>();
+            var results = new List<Element>();
             if (File.Exists("elements.json"))
             {
-                _cachedElements = new Collection<Element>(Parse().ToList());
+                _cachedElements = new List<Element>(Parse());
                 return;
             }
 
@@ -108,11 +170,11 @@ namespace nChem
 
                 foreach (var elementNode in elementNodes)
                 {
-                    var element = new Element();
                     var tds = new List<HtmlNode>(elementNode.Elements("td"));
-
-                    element.AtomicNumber = int.Parse(tds[0].InnerText);
-                    element.Symbol = tds[1].InnerText;
+                    var element = new Element(int.Parse(tds[0].InnerText))
+                    {
+                        Symbol = tds[1].InnerText
+                    };
 
                     string url = "http://www.periodni.com/" + tds[1].FirstChild.Attributes["href"].Value;
                     element.Name = tds[2].InnerText;
@@ -152,6 +214,16 @@ namespace nChem
 
                         switch (key)
                         {
+                            case "relative-atomic-mass":
+
+                                var splitValue = value.Split(' ');
+                                element.AtomicWeight = float.Parse(
+                                    Regex.Replace(splitValue.Length == 1 ? value : splitValue[0], "\\(\\d\\)", string.Empty)
+                                    .Replace("[", string.Empty)
+                                    .Replace(",", string.Empty));
+
+                                break;
+
                             case "group-numbers":
                                 element.Group = int.Parse(value);
                                 break;
@@ -245,7 +317,6 @@ namespace nChem
                     results.Add(element);
                 }
 
-                _cachedElements = new Collection<Element>();
                 _cachedElements = results;
             }
         }
@@ -273,7 +344,7 @@ namespace nChem
         /// Returns a cached collection of chemical elements fetched from <c>periodni.com</c>.
         /// </summary>
         /// <returns></returns>
-        public static Collection<Element> GetElements()
+        public static List<Element> GetElements()
         {
             return _cachedElements;
         }
