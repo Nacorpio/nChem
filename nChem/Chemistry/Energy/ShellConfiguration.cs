@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using nChem.Chemistry.Particles;
 
 namespace nChem.Chemistry.Energy
@@ -193,6 +194,28 @@ namespace nChem.Chemistry.Energy
         public Dictionary<char, int> ToDictionary()
         {
             return Shells.ToDictionary(x => x.Symbol, y => y.Electrons);
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < Shells.Count; i++)
+            {
+                Shell current = Shells.ToArray()[i];
+
+                if (i < Shells.Count - 1)
+                {
+                    sb.Append(current + " ");
+                    continue;
+                }
+
+                sb.Append(current);
+            }
+
+            return sb.ToString();
         }
     }
 }
