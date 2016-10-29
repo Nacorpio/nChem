@@ -75,35 +75,44 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public ShellConfiguration GetShellConfiguration()
         {
-            var shells = new Dictionary<char, int>();
-            int shellCount = ChemistryUtils.GetShellCount(Element.Electrons);
+            //var shells = new Dictionary<char, int>();
+            //int shellCount = ChemistryUtils.GetShellCount(Element.Electrons);
 
-            int electrons = Element.Electrons;
+            //int electrons = Element.Electrons;
 
-            for (var i = 0; i < shellCount; i++)
+            //for (var i = 0; i < shellCount; i++)
+            //{
+            //    if (electrons == 0)
+            //        break;
+
+            //    int capacity = ChemistryUtils.GetShellCapacity(i);
+            //    char shell = ChemistryUtils.ShellLabels[i];
+
+            //    if (!shells.ContainsKey(shell))
+            //        shells.Add(shell, 0);
+
+            //    if (electrons > capacity)
+            //    {
+            //        shells[shell] = capacity;
+            //        electrons -= capacity;
+
+            //        continue;
+            //    }
+
+            //    shells[shell] = electrons;
+            //    electrons = 0;
+            //}
+
+            return new ShellConfiguration(Element, new Dictionary<char, int>
             {
-                if (electrons == 0)
-                    break;
-
-                int capacity = ChemistryUtils.GetShellCapacity(i);
-                char shell = ChemistryUtils.ShellLabels[i];
-
-                if (!shells.ContainsKey(shell))
-                    shells.Add(shell, 0);
-
-                if (electrons > capacity)
-                {
-                    shells[shell] = capacity;
-                    electrons -= capacity;
-
-                    continue;
-                }
-
-                shells[shell] = electrons;
-                electrons = 0;
-            }
-
-            return new ShellConfiguration(shells);
+                {'k', 2},
+                {'l', 8},
+                {'m', 18},
+                {'n', 32},
+                {'o', 50},
+                {'p', 72},
+                {'q', 96}
+            });
         }
 
         /// <summary>
@@ -115,7 +124,16 @@ namespace nChem.Chemistry
             if (!IsIon())
                 throw new Exception("Can't convert an uncharged atom to an ion.");
 
-            return new Ion(new []{new Stack(this)});
+            return new Ion(this);
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="IAtomic"/> implementation is a compound.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCompound()
+        {
+            return false;
         }
 
         /// <summary>

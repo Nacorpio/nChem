@@ -24,6 +24,14 @@ namespace nChem
             "transition-element-scandium-group"
         };
 
+        public static char[][] ShellMatrix =
+        {
+            new[] {'s'},
+            new[] {'s', 'p'},
+            new[] {'s', 'p', 'd'},
+            new[] {'s', 'p', 'd', 'f'}
+        };
+
         public static Dictionary<char, char> Superscripts = new Dictionary<char, char>
         {
             {'⁰', '0'},
@@ -192,7 +200,7 @@ namespace nChem
             {'k', new[] {'s'}},
             {'l', new [] {'s', 'p'}},
             {'m', new[] {'s', 'p', 'd'}},
-            {'n', new[] {'s', 'p', 'd', 'f'}},
+            {'n', new[] {'s', 'p', 'd', 'f'}}
         };
 
         /// <summary>

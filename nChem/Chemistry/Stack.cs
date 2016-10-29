@@ -57,6 +57,15 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
+        /// Converts a specific <see cref="Compound"/> to a stack.
+        /// </summary>
+        /// <param name="compound">The compound to convert.</param>
+        public static implicit operator Stack(Compound compound)
+        {
+            return new Stack(compound);
+        }
+
+        /// <summary>
         /// Converts a specific <see cref="Atom"/> to a stack.
         /// </summary>
         /// <param name="atom">The atom to convert.</param>

@@ -37,7 +37,7 @@ namespace nChem.Chemistry.Energy
             if ((Index >= 3) && (electrons > d.Capacity))
                 Subshells.Add(f);
 
-            Populate(electrons);
+            //Populate(electrons);
         }
 
         /// <summary>
@@ -137,24 +137,18 @@ namespace nChem.Chemistry.Energy
         public void Populate(int n)
         {
             var remainingElectrons = n;
-
-            var i = 0;
-            while (remainingElectrons > 0)
+            foreach (var subshell in Subshells)
             {
-                var subshell = Subshells[i];
                 if (remainingElectrons > subshell.Capacity)
                 {
                     subshell.Populate(subshell.Capacity);
                     remainingElectrons -= subshell.Capacity;
 
-                    i++;
                     continue;
                 }
 
                 subshell.Populate(remainingElectrons);
                 remainingElectrons = 0;
-
-                i++;
             }
         }
 

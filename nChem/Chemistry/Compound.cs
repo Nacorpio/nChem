@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -15,7 +16,27 @@ namespace nChem.Chemistry
         /// <param name="enumerable">An enumerable.</param>
         public Compound(IEnumerable<Stack> enumerable)
         {
-            Stacks = enumerable;
+            var stacks = enumerable.ToList();
+
+            Stacks = stacks;
+            Electrons = Stacks.Sum(x => x.Size * x.Atom.Electrons);
+            Neutrons = Stacks.Sum(x => x.Size * x.Atom.Neutrons);
+            Protons = Stacks.Sum(x => x.Size * x.Atom.Protons);
+
+            foreach (var element in GetElements().ToArray())
+            {
+                int count = stacks.Count(x => Equals(x.Atom.GetElements().ToArray()[0], element));
+
+                if (count <= 1) continue;
+
+                int size = stacks.Where(x => Equals(x.Atom.GetElements().ToArray()[0], element)).Sum(x => x.Size);
+                var stack = new Stack(element, size);
+
+                int index = stacks.FindIndex(x => x.Atom.GetElements().ToArray()[0].Equals(element));
+
+                stacks.RemoveAll(x => x.Atom.GetElements().ToArray()[0].Equals(element));
+                stacks.Insert(index, stack);
+            }
         }
 
         /// <summary>
@@ -26,17 +47,17 @@ namespace nChem.Chemistry
         /// <summary>
         /// Gets the amount of electrons in the <see cref="Compound"/>.
         /// </summary>
-        public int Electrons => Stacks.Sum(x => x.Size * x.Atom.Electrons);
+        public int Electrons { get; set; }
 
-        /// <summary>
+        /// ;<summary>
         /// Gets the amount of protons in the <see cref="Compound"/>.
         /// </summary>
-        public int Protons => Stacks.Sum(x => x.Size * x.Atom.Protons);
+        public int Protons { get; }
 
         /// <summary>
         /// Gets the amount of neutrons in the <see cref="Compound"/>.
         /// </summary>
-        public int Neutrons => Stacks.Sum(x => x.Size * x.Atom.Neutrons);
+        public int Neutrons { get; }
 
         /// <summary>
         /// Converts a specific array of <see cref="Element"/> to a compound.
@@ -90,12 +111,12 @@ namespace nChem.Chemistry
         /// Returns the oxidation number of the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
-        public bool TryGetOxidationNumbers(out int[] numbers)
+        public bool TryGetOxidationNumbers(out Dictionary<Element, int> numbers)
         {
-            int target = IsIon() ? new Ion(Stacks.ToArray()).GetCharge() : 0;
+            int target = IsIon() ? new Ion(this).Charge : 0;
 
-            var results = new List<int>();
-            int? unknown = null;
+            var results = new Dictionary<Element, int>();
+            Tuple<int, Element> unknown = null;
 
             int i = 0;
             foreach (var stack in Stacks)
@@ -105,9 +126,10 @@ namespace nChem.Chemistry
                 var compound = stack.Atom as Compound;
                 if (compound != null)
                 {
-                    int[] cn;
+                    Dictionary<Element, int> cn;
+
                     if (compound.TryGetOxidationNumbers(out cn))
-                        results.AddRange(cn);
+                        cn.ToList().ForEach(x => results.Add(x.Key, x.Value));
 
                     continue;
                 }
@@ -119,22 +141,22 @@ namespace nChem.Chemistry
                 switch (atom.Element.Group)
                 {
                     case 1:
-                        results.Add(1 * stack.Size);
+                        results.Add(atom.Element, 1 * stack.Size);
                         continue;
 
                     case 2:
-                        results.Add(2 * stack.Size);
+                        results.Add(atom.Element, 2 * stack.Size);
                         continue;
 
                     case 17:
                         {
                             if (GetElements().Any(x => x.AtomicNumber == 8))
                             {
-                                unknown = i - 1;
+                                unknown = new Tuple<int, Element>(i - 1, atom.Element);
                                 continue;
                             }
 
-                            results.Add(-1 * stack.Size);
+                            results.Add(atom.Element, -1 * stack.Size);
                             continue;
                         }
                 }
@@ -142,33 +164,39 @@ namespace nChem.Chemistry
                 switch (atom.Element.AtomicNumber)
                 {
                     case 1:
-                        results.Add(GetElements().Any(x => x.IsMetal) ? -1 : 1 * stack.Size);
+                        results.Add(atom.Element, GetElements().Any(x => x.IsMetal) ? -1 : 1 * stack.Size);
                         continue;
 
                     case 8:
-                        results.Add(-2 * stack.Size);
+                        if (results.ContainsKey(atom.Element))
+                        {
+                            results[atom.Element] += -2*stack.Size;
+                            continue;
+                        }
+
+                        results.Add(atom.Element, -2 * stack.Size);
                         continue;
 
                     case 9:
-                        results.Add(-1 * stack.Size);
+                        results.Add(atom.Element, -1 * stack.Size);
                         continue;
                 }
 
-                unknown = i - 1;
+                unknown = new Tuple<int, Element>(i - 1, atom.Element);
             }
 
             if (unknown != null)
             {
                 int x = byte.MaxValue;
 
-                while (x + results.Sum(y => y) != target)
+                while (x + results.Sum(y => y.Value) != target)
                     x--;
 
-                results.Insert((int) unknown, x);
+                results[unknown.Item2] = x;
             }
 
-            numbers = results.ToArray();
-            return numbers.Sum(x => x) == target;
+            numbers = results;
+            return numbers.Sum(x => x.Value) == target;
         }
 
         /// <summary>
@@ -178,6 +206,15 @@ namespace nChem.Chemistry
         public bool IsIon()
         {
             return Protons != Electrons;
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="IAtomic"/> implementation is a compound.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCompound()
+        {
+            return true;
         }
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>

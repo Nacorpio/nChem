@@ -86,7 +86,7 @@ namespace nChem.Chemistry.Energy
                 if (remainingElectrons <= 0)
                     break;
 
-                if (Orbitals.Length == 1)
+                if (Orbitals.Length == 1 && remainingElectrons >= 2)
                 {
                     orbital.Populate();
                     orbital.Populate();

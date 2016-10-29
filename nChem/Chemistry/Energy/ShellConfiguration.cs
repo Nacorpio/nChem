@@ -14,19 +14,24 @@ namespace nChem.Chemistry.Energy
         /// <summary>
         /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
         /// </summary>
+        /// <param name="element">The parent element.</param>
         /// <param name="collection">The collection of shells.</param>
-        public ShellConfiguration(ICollection<Shell> collection)
+        public ShellConfiguration(Element element, ICollection<Shell> collection)
         {
             Shells = collection;
+            Populate();
         }
 
         /// <summary>
         /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
         /// </summary>
+        /// <param name="element">The parent element.</param>
         /// <param name="values">An ordered collection of shells.</param>
-        public ShellConfiguration(int[] values)
+        public ShellConfiguration(Element element, int[] values)
         {
             Shells = new Collection<Shell>();
+            Element = element;
+
             for (var i = 0; i < values.Length; i++)
             {
                 int value = values[i];
@@ -36,15 +41,20 @@ namespace nChem.Chemistry.Energy
 
                 Shells.Add(new Shell(ChemistryUtils.ShellLabels[i], value));
             }
+
+            Populate();
         }
 
         /// <summary>
         /// Initializes an instance of the <see cref="ShellConfiguration"/> class.
         /// </summary>
+        /// <param name="element">The parent element.</param>
         /// <param name="values">An ordered dictionary of shells.</param>
-        public ShellConfiguration(Dictionary<char, int> values)
+        public ShellConfiguration(Element element, Dictionary<char, int> values)
         {
             Shells = new Collection<Shell>();
+            Element = element;
+
             for (var i = 0; i < values.Count; i++)
             {
                 int capacity = ChemistryUtils.GetShellCapacity(i);
@@ -55,7 +65,14 @@ namespace nChem.Chemistry.Energy
 
                 Shells.Add(new Shell(current.Key, current.Value));
             }
+
+            Populate();
         }
+
+        /// <summary>
+        /// Gets the parent element of the <see cref="ShellConfiguration"/>.
+        /// </summary>
+        public Element Element { get; }
 
         /// <summary>
         /// Gets a <see cref="Shell"/> with the specified symbol.
@@ -78,6 +95,75 @@ namespace nChem.Chemistry.Energy
         /// Gets the amount of unpaired electrons in the <see cref="ShellConfiguration"/>.
         /// </summary>
         public int UnpairedElectrons => Shells.Sum(x => x.UnpairedElectrons);
+
+        /// <summary>
+        /// Populates the current <see cref="ShellConfiguration"/> instance.
+        /// </summary>
+        public void Populate()
+        {
+            int left = Element.Electrons;
+            for (var i = 0; i < ChemistryUtils.EnergyLevelConfiguration.Count; i++)
+            {
+                if (left == 0)
+                    break;
+
+                KeyValuePair<char, char[]> pair = ChemistryUtils.EnergyLevelConfiguration.ToList()[i];
+                Shell shell = this[pair.Key];
+
+                for (int x = 0; x < pair.Value.Length; x++)
+                {
+                    if (left == 0)
+                        break;
+
+                    Subshell subshell = shell[pair.Value[x]];
+
+                    if (subshell.Electrons > 0)
+                        continue;
+
+                    if (left - subshell.Capacity < 0)
+                    {
+                        subshell.Populate(left);
+                        left = 0;
+                    }
+                    else
+                    {
+                        subshell.Populate(subshell.Capacity);
+                        left -= subshell.Capacity;
+                    }
+
+                    int stepsDown = x;
+                    for (int z = 0; z < stepsDown; z++)
+                    {
+                        if (left == 0)
+                            break;
+
+                        Subshell diagonal = Shells.ToList()[i + z + 1].Subshells[x - (z + 1)];
+                        if (left - diagonal.Capacity < 0)
+                        {
+                            diagonal.Populate(left);
+                            left = 0;
+                        }
+                        else
+                        {
+                            diagonal.Populate(diagonal.Capacity);
+                            left -= diagonal.Capacity;
+                        }
+                    }
+                }
+            }
+
+            foreach (var shell in Shells.ToArray())
+            {
+                foreach (var subshell in shell.Subshells.ToArray())
+                {
+                    if (subshell.Electrons == 0)
+                        shell.Subshells.Remove(subshell);
+                }
+
+                if (shell.Electrons == 0)
+                    Shells.Remove(shell);
+            }
+        }
 
         /// <summary>
         /// Returns all the electrons in the <see cref="ShellConfiguration"/>.

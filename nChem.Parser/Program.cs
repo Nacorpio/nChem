@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using nChem.Chemistry;
+﻿using nChem.Chemistry;
+using nChem.Chemistry.Energy;
 
 namespace nChem.Parser
 {
@@ -7,18 +7,8 @@ namespace nChem.Parser
     {
         static void Main(string[] args)
         {
-            var compound = new Compound(new[]
-            {
-                new Stack(Element.Hydrogen, 2),
-                new Stack(Element.Sulfur),
-                new Stack(Element.Oxygen, 4), 
-            });
-
-            int[] numbers;
-            if (compound.TryGetOxidationNumbers(out numbers))
-            {
-                int total = numbers.Sum(x => x);
-            }
+            var atom = new Atom(Element.Calcium);
+            ShellConfiguration configuration = atom.GetShellConfiguration();
         }
     }
 }

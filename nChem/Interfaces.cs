@@ -37,6 +37,12 @@ namespace nChem
         int Neutrons { get; }
 
         /// <summary>
+        /// Determines whether the <see cref="IAtomic"/> implementation is a compound.
+        /// </summary>
+        /// <returns></returns>
+        bool IsCompound();
+
+        /// <summary>
         /// Returns the elements in the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
@@ -49,9 +55,9 @@ namespace nChem
     public interface IChargeable
     {
         /// <summary>
-        /// Returns the charge of the <see cref="IChargeable"/> implementation.
+        /// Gets the charge of the <see cref="IChargeable"/> implementation.
         /// </summary>
         /// <returns></returns>
-        int GetCharge();
+        int Charge { get; }
     }
 }
