@@ -42,7 +42,16 @@ namespace nChem.Chemistry.Energy
         {
             return _electrons;
         }
-        
+
+        /// <summary>
+        /// Determines whether the <see cref="Orbital"/> is empty.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return this[0] == null && this[1] == null;
+        }
+
         /// <summary>
         /// Determines whether the <see cref="Orbital"/> is paired.
         /// </summary>

@@ -104,8 +104,6 @@ namespace nChem.Chemistry
 
         #endregion
 
-        
-
         /// <summary>
         /// Initializes an instance of the <see cref="Element"/> class.
         /// </summary>

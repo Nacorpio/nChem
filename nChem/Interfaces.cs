@@ -19,7 +19,7 @@ namespace nChem
         /// Returns the atomic weight of the <see cref="IAtomic"/> implementation.
         /// </summary>
         /// <returns></returns>
-        float? GetAtomicWeight();
+        float? AtomicWeight { get; }
 
         /// <summary>
         /// Gets the electron amount of the <see cref="IAtomic"/> implementation.
@@ -37,6 +37,11 @@ namespace nChem
         int Neutrons { get; }
 
         /// <summary>
+        /// Gets a value indicating if the <see cref="IAtomic"/> implementation is an <see cref="nChem.Chemistry.Ion"/>.
+        /// </summary>
+        bool IsIon { get; }
+
+        /// <summary>
         /// Determines whether the <see cref="IAtomic"/> implementation is a compound.
         /// </summary>
         /// <returns></returns>
@@ -52,12 +57,12 @@ namespace nChem
     /// <summary>
     /// Represents the implementation of an atom/molecule with a charge (ion).
     /// </summary>
-    public interface IChargeable
+    public interface ICharged
     {
         /// <summary>
-        /// Gets the charge of the <see cref="IChargeable"/> implementation.
+        /// Returns the charge of the <see cref="ICharged"/> implementation.
         /// </summary>
         /// <returns></returns>
-        int Charge { get; }
+        int GetCharge();
     }
 }

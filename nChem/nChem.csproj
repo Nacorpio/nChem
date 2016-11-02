@@ -53,6 +53,7 @@
     <Compile Include="Chemistry\Particles\Electron.cs" />
     <Compile Include="Chemistry\Element.cs" />
     <Compile Include="Chemistry\Element.Parse.cs" />
+    <Compile Include="Chemistry\Particles\Proton.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Chemistry\Ion.cs" />

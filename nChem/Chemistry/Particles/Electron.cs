@@ -1,6 +1,9 @@
 namespace nChem.Chemistry.Particles
 {
-    public sealed class Electron
+    /// <summary>
+    /// Represents an electron particle, which has a negative charge.
+    /// </summary>
+    public sealed class Electron : ICharged
     {
         /// <summary>
         /// Initializes an instance of the <see cref="Electron"/> class.
@@ -15,5 +18,11 @@ namespace nChem.Chemistry.Particles
         /// Gets the spin of the <see cref="Electron"/>.
         /// </summary>
         public ElectronSpin Spin { get; }
+
+        /// <summary>
+        /// Returns the charge of the <see cref="Electron"/>.
+        /// </summary>
+        /// <returns></returns>
+        public int GetCharge() => -1;
     }
 }

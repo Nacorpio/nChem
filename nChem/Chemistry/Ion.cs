@@ -6,7 +6,7 @@ namespace nChem.Chemistry
     /// <summary>
     /// Represents an <see cref="Atom"/> with a non-neutral charge.
     /// </summary>
-    public sealed class Ion : IChargeable
+    public sealed class Ion : ICharged
     {
         /// <summary>
         /// Initializes an instance of the <see cref="Ion"/> class.
@@ -49,13 +49,13 @@ namespace nChem.Chemistry
         /// Gets a value indicating if the <see cref="Ion"/> is a cation (has a positive charge).
         /// </summary>
         /// <returns></returns>
-        public bool IsCation => Charge > 0;
+        public bool IsCation => GetCharge() > 0;
 
         /// <summary>
         /// Gets a value indicating if the <see cref="Ion"/> is an anion (has a negative charge).
         /// </summary>
         /// <returns></returns>
-        public bool IsAnion => Charge < 0;
+        public bool IsAnion => GetCharge() < 0;
 
         /// <summary>
         /// Gets a value indicating if the <see cref="Ion"/> is monatomic (only one element).
@@ -64,10 +64,10 @@ namespace nChem.Chemistry
         public bool IsMonatomic => !Content.IsCompound();
 
         /// <summary>
-        /// Gets the charge of the <see cref="Ion"/>.
+        /// Returns the charge of the <see cref="Ion"/>.
         /// </summary>
         /// <returns></returns>
-        public int Charge => -(ToCompound().Stacks.Sum(x => x.Atom.Protons * x.Size)
+        public int GetCharge() => -(ToCompound().Stacks.Sum(x => x.Atom.Protons * x.Size)
                 - ToCompound().Stacks.Sum(x => x.Atom.Electrons * x.Size));
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
-        /// Determines whether the <see cref="IChargeable"/> implementation is charged.
+        /// Determines whether the <see cref="ICharged"/> implementation is charged.
         /// </summary>
         /// <returns></returns>
         public bool IsCharged()

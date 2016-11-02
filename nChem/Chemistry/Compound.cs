@@ -60,6 +60,18 @@ namespace nChem.Chemistry
         public int Neutrons { get; }
 
         /// <summary>
+        /// Gets a value indicating if the <see cref="Compound"/> is an ion.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsIon => Protons != Electrons;
+
+        /// <summary>
+        /// Returns the total atomic weight of the <see cref="Compound"/>.
+        /// </summary>
+        /// <returns></returns>
+        public float? AtomicWeight => Stacks.Sum(x => x.AtomicWeight);
+
+        /// <summary>
         /// Converts a specific array of <see cref="Element"/> to a compound.
         /// </summary>
         /// <param name="elements">The elements to convert.</param>
@@ -87,16 +99,6 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
-        /// Returns the total atomic weight of the <see cref="Compound"/>.
-        /// </summary>
-        /// <returns></returns>
-        public float? GetAtomicWeight()
-        {
-            return Stacks
-                .Sum(x => x.GetAtomicWeight());
-        }
-        
-        /// <summary>
         /// Returns an array of all elements that the <see cref="Compound"/> contains.
         /// </summary>
         /// <returns></returns>
@@ -113,7 +115,7 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public bool TryGetOxidationNumbers(out Dictionary<Element, int> numbers)
         {
-            int target = IsIon() ? new Ion(this).Charge : 0;
+            int target = IsIon ? new Ion(this).GetCharge() : 0;
 
             var results = new Dictionary<Element, int>();
             Tuple<int, Element> unknown = null;
@@ -197,15 +199,6 @@ namespace nChem.Chemistry
 
             numbers = results;
             return numbers.Sum(x => x.Value) == target;
-        }
-
-        /// <summary>
-        /// Determines whether the <see cref="Compound"/> is an ion.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsIon()
-        {
-            return Protons != Electrons;
         }
 
         /// <summary>

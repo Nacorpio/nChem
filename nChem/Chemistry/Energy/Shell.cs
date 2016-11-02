@@ -36,8 +36,6 @@ namespace nChem.Chemistry.Energy
 
             if ((Index >= 3) && (electrons > d.Capacity))
                 Subshells.Add(f);
-
-            //Populate(electrons);
         }
 
         /// <summary>

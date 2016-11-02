@@ -1,6 +1,4 @@
-﻿using System;
-using nChem.Chemistry;
-using nChem.Chemistry.Energy;
+﻿using nChem.Chemistry;
 
 namespace nChem.Parser
 {
@@ -8,11 +6,28 @@ namespace nChem.Parser
     {
         static void Main(string[] args)
         {
-            var atom = new Atom(Element.Copper);
-            ShellConfiguration configuration = atom.GetShellConfiguration();
+            var equation = new RedoxEquation
+            (
+                new Stack[]
+                {
+                    new Atom(Element.Calcium),
+                    new Stack(Element.Chlorine, 2),
+                },
+                new Stack[]
+                {
+                    new Compound(new Stack[]
+                    {
+                        new Atom(Element.Calcium),
+                        new Stack(Element.Chlorine, 2),
+                    }),
+                }
+            );
 
-            Console.WriteLine(configuration);
-            Console.ReadLine();
+            Equation x;
+            if (equation.Balance(out x))
+            {
+                
+            }
         }
     }
 }

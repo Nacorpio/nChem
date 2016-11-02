@@ -121,7 +121,7 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public Ion ToIon()
         {
-            if (!IsIon())
+            if (!IsIon)
                 throw new Exception("Can't convert an uncharged atom to an ion.");
 
             return new Ion(this);
@@ -137,22 +137,16 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
-        /// Determines whether the <see cref="Atom"/> is an ion.
+        /// Gets a value indicating if the <see cref="Atom"/> is an ion.
         /// </summary>
         /// <returns></returns>
-        public bool IsIon()
-        {
-            return Electrons != Protons;
-        }
+        public bool IsIon => Electrons != Protons;
 
         /// <summary>
         /// Returns the atomic weight of the <see cref="Atom"/>.
         /// </summary>
         /// <returns></returns>
-        public float? GetAtomicWeight()
-        {
-            return Element.AtomicWeight;
-        }
+        public float? AtomicWeight => Element.AtomicWeight;
 
         /// <summary>
         /// Returns the elements in the <see cref="IAtomic"/> implementation.

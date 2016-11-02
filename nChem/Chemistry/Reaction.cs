@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace nChem.Chemistry
 {
@@ -43,8 +44,8 @@ namespace nChem.Chemistry
                 }
 
                 var compound = (Compound)current.Atom;
-
                 Dictionary<Element, int> numbers;
+
                 if (!compound.TryGetOxidationNumbers(out numbers))
                     throw new Exception("Couldn't retrieve oxidation numbers.");
 
@@ -100,5 +101,41 @@ namespace nChem.Chemistry
         /// </summary>
         /// <returns></returns>
         public abstract bool Balance(out Equation equation);
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            Stack[] left = Left.ToArray();
+            Stack[] right = Right.ToArray();
+
+            for (var i = 0; i < left.Length; i++)
+            {
+                Stack current = left[i];
+                if (i < left.Length - 1)
+                {
+                    sb.Append(current + " + ");
+                    continue;
+                }
+
+                sb.Append(current + " -> ");
+            }
+
+            for (var i = 0; i < right.Length; i++)
+            {
+                Stack current = right[i];
+                if (i < right.Length - 1)
+                {
+                    sb.Append(current + " + ");
+                    continue;
+                }
+
+                sb.Append(current);
+            }
+
+            return sb.ToString();
+        }
     }
 }

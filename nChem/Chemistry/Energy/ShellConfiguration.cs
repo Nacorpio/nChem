@@ -20,6 +20,8 @@ namespace nChem.Chemistry.Energy
         public ShellConfiguration(Element element, ICollection<Shell> collection)
         {
             Shells = collection;
+            Element = element;
+
             Populate();
         }
 
@@ -202,7 +204,7 @@ namespace nChem.Chemistry.Energy
         {
             var sb = new StringBuilder();
 
-            for (int i = 0; i < Shells.Count; i++)
+            for (var i = 0; i < Shells.Count; i++)
             {
                 Shell current = Shells.ToArray()[i];
 
