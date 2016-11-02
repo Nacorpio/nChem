@@ -23,33 +23,33 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="stacks">The stacks.</param>
         /// <returns></returns>
-        private List<Dictionary<Element, int>> GetOxidationNumbers(IEnumerable<Stack> stacks)
+        private IEnumerable<KeyValuePair<IAtomic, int[]>> GetOxidationNumbers(IEnumerable<Stack> stacks)
         {
-            var results = new List<Dictionary<Element, int>>();
+            var results = new List<KeyValuePair<IAtomic, int[]>>();
+            var queue = new Queue<Stack>(stacks.ToArray());
 
-            var queue = new Queue<Stack>(stacks);
             while (queue.Count > 0)
             {
                 Stack current = queue.Peek();
 
                 if (!current.Atom.IsCompound())
                 {
-                    results.Add(new Dictionary<Element, int>
-                    {
-                        {current.Atom.GetElements().ToArray()[0], 0}
-                    });
-
+                    results.Add(new KeyValuePair<IAtomic, int[]>(current.Atom, new []{0}));
                     queue.Dequeue();
+
                     continue;
                 }
 
-                var compound = (Compound)current.Atom;
-                Dictionary<Element, int> numbers;
+                Compound compound = current.Atom as Compound;
 
+                if (compound == null)
+                    throw new Exception("Expected compound.");
+
+                Dictionary<Element, int> numbers;
                 if (!compound.TryGetOxidationNumbers(out numbers))
                     throw new Exception("Couldn't retrieve oxidation numbers.");
 
-                results.Add(numbers);
+                results.Add(new KeyValuePair<IAtomic, int[]>(current.Atom, numbers.Select(x => x.Value).ToArray()));
                 queue.Dequeue();
             }
 
@@ -62,8 +62,8 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public override bool Balance(out Equation equation)
         {
-            List<Dictionary<Element, int>> left = GetOxidationNumbers(Left);
-            List<Dictionary<Element, int>> right = GetOxidationNumbers(Right);
+            var left = GetOxidationNumbers(Left);
+            var right = GetOxidationNumbers(Right);
 
             equation = new RedoxEquation(null, null);
             return true;

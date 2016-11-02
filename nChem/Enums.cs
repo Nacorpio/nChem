@@ -1,6 +1,4 @@
-﻿using nChem.Chemistry;
-
-namespace nChem
+﻿namespace nChem
 {
     public enum PrefixKind : long
     {
@@ -60,7 +58,7 @@ namespace nChem
     }
 
     /// <summary>
-    /// Represents an electron spin.
+    /// Represents the spin of an <see cref="Chemistry.Particles.Electron"/>.
     /// </summary>
     public enum ElectronSpin
     {

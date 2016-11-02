@@ -118,7 +118,7 @@ namespace nChem.Chemistry
             int target = IsIon ? new Ion(this).GetCharge() : 0;
 
             var results = new Dictionary<Element, int>();
-            Tuple<int, Element> unknown = null;
+            Tuple<int, Element, Stack> unknown = null;
 
             int i = 0;
             foreach (var stack in Stacks)
@@ -154,7 +154,7 @@ namespace nChem.Chemistry
                         {
                             if (GetElements().Any(x => x.AtomicNumber == 8))
                             {
-                                unknown = new Tuple<int, Element>(i - 1, atom.Element);
+                                unknown = new Tuple<int, Element, Stack>(i - 1, atom.Element, stack);
                                 continue;
                             }
 
@@ -184,7 +184,7 @@ namespace nChem.Chemistry
                         continue;
                 }
 
-                unknown = new Tuple<int, Element>(i - 1, atom.Element);
+                unknown = new Tuple<int, Element, Stack>(i - 1, atom.Element, stack);
             }
 
             if (unknown != null)
@@ -194,7 +194,7 @@ namespace nChem.Chemistry
                 while (x + results.Sum(y => y.Value) != target)
                     x--;
 
-                results[unknown.Item2] = x;
+                results[unknown.Item2] = x / unknown.Item3.Size;
             }
 
             numbers = results;
