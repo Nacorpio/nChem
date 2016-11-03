@@ -75,34 +75,6 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public ShellConfiguration GetShellConfiguration()
         {
-            //var shells = new Dictionary<char, int>();
-            //int shellCount = ChemistryUtils.GetShellCount(Element.Electrons);
-
-            //int electrons = Element.Electrons;
-
-            //for (var i = 0; i < shellCount; i++)
-            //{
-            //    if (electrons == 0)
-            //        break;
-
-            //    int capacity = ChemistryUtils.GetShellCapacity(i);
-            //    char shell = ChemistryUtils.ShellLabels[i];
-
-            //    if (!shells.ContainsKey(shell))
-            //        shells.Add(shell, 0);
-
-            //    if (electrons > capacity)
-            //    {
-            //        shells[shell] = capacity;
-            //        electrons -= capacity;
-
-            //        continue;
-            //    }
-
-            //    shells[shell] = electrons;
-            //    electrons = 0;
-            //}
-
             return new ShellConfiguration(Element, new Dictionary<char, int>
             {
                 {'k', 2},
@@ -121,7 +93,7 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public Ion ToIon()
         {
-            if (!IsIon)
+            if (!IsIon())
                 throw new Exception("Can't convert an uncharged atom to an ion.");
 
             return new Ion(this);
@@ -137,10 +109,10 @@ namespace nChem.Chemistry
         }
 
         /// <summary>
-        /// Gets a value indicating if the <see cref="Atom"/> is an ion.
+        /// Returns whether the <see cref="Atom"/> is an ion.
         /// </summary>
         /// <returns></returns>
-        public bool IsIon => Electrons != Protons;
+        public bool IsIon() => Electrons != Protons;
 
         /// <summary>
         /// Returns the atomic weight of the <see cref="Atom"/>.

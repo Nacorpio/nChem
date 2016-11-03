@@ -67,8 +67,7 @@ namespace nChem.Chemistry
         /// Returns the charge of the <see cref="Ion"/>.
         /// </summary>
         /// <returns></returns>
-        public int GetCharge() => -(ToCompound().Stacks.Sum(x => x.Atom.Protons * x.Size)
-                - ToCompound().Stacks.Sum(x => x.Atom.Electrons * x.Size));
+        public int GetCharge() => -(Content.Electrons - Content.Protons);
 
         /// <summary>
         /// Converts the current <see cref="Ion"/> instance to a <see cref="Compound"/>.

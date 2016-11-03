@@ -10,16 +10,21 @@ namespace nChem.Parser
             (
                 new Stack[]
                 {
-                    new Atom(Element.Calcium),
-                    new Stack(Element.Chlorine, 2),
+                    new Atom(Element.Silver),
+                    new Compound(new Stack[]
+                    {
+                        new Atom(Element.Nitrogen),
+                        new Stack(Element.Oxygen, 3),  
+                    }, -1), 
                 },
                 new Stack[]
                 {
+                    new Atom(Element.Silver, 1),
                     new Compound(new Stack[]
                     {
-                        new Atom(Element.Calcium),
-                        new Stack(Element.Chlorine, 2),
-                    }),
+                        new Atom(Element.Nitrogen),
+                        new Atom(Element.Oxygen), 
+                    }), 
                 }
             );
 
