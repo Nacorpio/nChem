@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using nChem.Chemistry;
 
 namespace nChem
 {
@@ -38,13 +37,13 @@ namespace nChem
         int Neutrons { get; }
 
         /// <summary>
-        /// Converts the current <see cref="IAtomic"/> implement to an <see cref="Ion"/> instance.
+        /// Converts the current <see cref="IAtomic"/> implement to an <see cref="Chemistry.Ion"/> instance.
         /// </summary>
         /// <returns></returns>
-        Ion ToIon();
+        Chemistry.Ion ToIon();
 
         /// <summary>
-        /// Returns whether the <see cref="IAtomic"/> implementation is an <see cref="nChem.Chemistry.Ion"/>.
+        /// Returns whether the <see cref="IAtomic"/> implementation is an <see cref="Chemistry.Ion"/>.
         /// </summary>
         bool IsIon();
 

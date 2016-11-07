@@ -13,9 +13,9 @@ namespace nChem.Chemistry
         /// <summary>
         ///     Initializes an instance of the <see cref="Equation" /> class.
         /// </summary>
-        /// <param name="left">The left-hand assignment.</param>
-        /// <param name="right">The right-hand assignment.</param>
-        public RedoxEquation(IEnumerable<Stack> left, IEnumerable<Stack> right) : base(left, right)
+        /// <param name="reactants">The reactants.</param>
+        /// <param name="products">The products.</param>
+        public RedoxEquation(IEnumerable<Stack> reactants, IEnumerable<Stack> products) : base(reactants, products)
         {
         }
 
@@ -62,20 +62,20 @@ namespace nChem.Chemistry
         /// <summary>
         /// Calculates the oxidation- and reduction deltas of the specified sides.
         /// </summary>
-        /// <param name="left">The left-hand side.</param>
-        /// <param name="right">The right-hand side.</param>
+        /// <param name="reactants">The left-hand side.</param>
+        /// <param name="products">The right-hand side.</param>
         /// <returns></returns>
-        private IEnumerable<Tuple<Element, int, int>> GetDeltas(List<KeyValuePair<IAtomic, int[]>> left, List<KeyValuePair<IAtomic, int[]>> right)
+        private IEnumerable<Tuple<Element, int, int>> GetDeltas(List<KeyValuePair<IAtomic, int[]>> reactants, List<KeyValuePair<IAtomic, int[]>> products)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
+            if (reactants == null)
+                throw new ArgumentNullException(nameof(reactants));
 
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
+            if (products == null)
+                throw new ArgumentNullException(nameof(products));
 
-            var elements = left
+            var elements = reactants
                 .SelectMany(x => x.Key.GetElements())
-                .Concat(right
+                .Concat(products
                     .SelectMany(x => x.Key.GetElements()))
                 .Distinct()
                 .ToArray();
@@ -86,10 +86,10 @@ namespace nChem.Chemistry
                 var element = elements[i];
 
                 var leftFind =
-                    left.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
+                    reactants.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
 
                 var rightFind =
-                    right.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
+                    products.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
 
                 var leftNumber =
                     leftFind.Value.Reverse().ToArray()[
@@ -111,11 +111,35 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public override bool Balance(out Equation equation)
         {
-            IEnumerable<KeyValuePair<IAtomic, int[]>> left = GetOxidationNumbers(LReactant).ToArray();
-            IEnumerable<KeyValuePair<IAtomic, int[]>> right = GetOxidationNumbers(RReactant).ToArray();
+            /*
+                Balancing Redox equations in acidic solution:   
 
-            Tuple<Element, int, int>[] deltas = GetDeltas(left.ToList(), right.ToList()).ToArray();
+                Step #1: Determine the oxidation numbers of all elements in the equation.
+                Step #2: Determine which elements are being oxidized and which are being reduced.
+                Step #3: Form half-reactions from the oxidized- and reduced element.
 
+                Step #4: Balance the half-reactions by both charge and element quantity.
+                    Do the following for both the reduction- and oxidation half-reactions:
+                        1: Determine the element deltas.
+                        2: Add H2O on unbalanced Oxygens and add a positive Hydrogen ion on unbalanced Hydrogens.
+                        3: Determine the charge deltas. 
+                        4: Add electrons on the unbalanced side in order to match the charges.
+                        5: Balance the electrons by multiplying the half-reactions with the least amount of electrons by a certain number.
+                        6: Eliminate any electrons that cancel out.
+                        7: Simplify half-reactions that can be further simplified.
+
+                Step #5: Combine the two half-reactions from left to right.
+                Step #6: Confirm that both sides are properly balanced.
+            */
+
+            // Calculate the oxidation numbers for the reactants and products.
+            IEnumerable<KeyValuePair<IAtomic, int[]>> reactants = GetOxidationNumbers(Reactants).ToArray();
+            IEnumerable<KeyValuePair<IAtomic, int[]>> products = GetOxidationNumbers(Products).ToArray();
+
+            // Calculate the oxidation- and reduction deltas.
+            Tuple<Element, int, int>[] deltas = GetDeltas(reactants.ToList(), products.ToList()).ToArray();
+
+            // Organize the oxidations and reductions in two separate enumerables.
             var oxidations = deltas.Where(x => x.Item2 < x.Item3);
             var reductions = deltas.Where(x => x.Item2 > x.Item3);
 
@@ -132,23 +156,23 @@ namespace nChem.Chemistry
         /// <summary>
         ///     Initializes an instance of the <see cref="Equation" /> class.
         /// </summary>
-        /// <param name="r0">The left-hand reactant.</param>
-        /// <param name="r1">The right-hand reactant.</param>
-        protected Equation(IEnumerable<Stack> r0, IEnumerable<Stack> r1)
+        /// <param name="reactants">The reactants.</param>
+        /// <param name="products">The products.</param>
+        protected Equation(IEnumerable<Stack> reactants, IEnumerable<Stack> products)
         {
-            LReactant = r0;
-            RReactant = r1;
+            Reactants = reactants;
+            Products = products;
         }
 
         /// <summary>
-        ///     Gets the left-hand assignment of the <see cref="Equation" />.
+        ///     Gets the left-hand assignment (reactants) of the <see cref="Equation" />.
         /// </summary>
-        public IEnumerable<Stack> LReactant { get; }
+        public IEnumerable<Stack> Reactants { get; }
 
         /// <summary>
-        ///     Gets the right-hand assignment of the <see cref="Equation" />.
+        ///     Gets the right-hand assignment (products) of the <see cref="Equation" />.
         /// </summary>
-        public IEnumerable<Stack> RReactant { get; }
+        public IEnumerable<Stack> Products { get; }
 
         /// <summary>
         ///     Balances the <see cref="Equation" />.
@@ -162,8 +186,8 @@ namespace nChem.Chemistry
         {
             var sb = new StringBuilder();
 
-            var left = LReactant.ToArray();
-            var right = RReactant.ToArray();
+            var left = Reactants.ToArray();
+            var right = Products.ToArray();
 
             for (var i = 0; i < left.Length; i++)
             {

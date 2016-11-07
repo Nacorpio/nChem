@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace nChem.Chemistry
@@ -35,7 +36,7 @@ namespace nChem.Chemistry
         { }
 
         /// <summary>
-        /// Gets the stacks of the 
+        /// Gets the content of the <see cref="Ion"/>.
         /// </summary>
         public IAtomic Content { get; }
 
@@ -43,7 +44,7 @@ namespace nChem.Chemistry
         /// Gets a value indicating if the <see cref="Ion"/> is polyatomic (more than one atom).
         /// </summary>
         /// <returns></returns>
-        public bool IsPolyatomic => Content.IsCompound() && ((Compound)Content).Stacks.Sum(x => x.Size) > 1;
+        public bool IsPolyatomic => Content.IsCompound() && ((Compound)Content).Sum(x => x.Size) > 1;
 
         /// <summary>
         /// Gets a value indicating if the <see cref="Ion"/> is a cation (has a positive charge).
@@ -68,6 +69,30 @@ namespace nChem.Chemistry
         /// </summary>
         /// <returns></returns>
         public int GetCharge() => -(Content.Electrons - Content.Protons);
+
+        /// <summary>
+        /// Converts a specific <see cref="Compound"/> to an ion.
+        /// </summary>
+        /// <param name="compound">The compound to convert.</param>
+        public static implicit operator Ion(Compound compound)
+        {
+            if (!compound.IsIon()) 
+                throw new ArgumentException("The specified compound isn't an ion.", nameof(compound));
+
+            return new Ion(compound);
+        }
+
+        /// <summary>
+        /// Converts a specific <see cref="Atom"/> to an ion.
+        /// </summary>
+        /// <param name="atom">The atom to convert.</param>
+        public static implicit operator Ion(Atom atom)
+        {
+            if (!atom.IsIon())
+                throw new ArgumentException("The specified atom isn't an ion.", nameof(atom));
+
+            return new Ion(atom);
+        }
 
         /// <summary>
         /// Converts the current <see cref="Ion"/> instance to a <see cref="Compound"/>.
