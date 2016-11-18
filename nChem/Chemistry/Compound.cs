@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +10,12 @@ namespace nChem.Chemistry
     /// </summary>
     public sealed class Compound : List<Stack>, IAtomic
     {
+        /// <summary>
+        /// Initializes an instance of the <see cref="Compound"/> class.
+        /// </summary>
+        public Compound()
+        { }
+
         /// <summary>
         /// Initializes an instance of the <see cref="Compound"/> class.
         /// </summary>
@@ -61,11 +66,68 @@ namespace nChem.Chemistry
                 int size = this.Where(x => Equals(x.Atom.GetElements().ToArray()[0], element)).Sum(x => x.Size);
                 var stack = new Stack(element, size);
 
-                int index = this.FindIndex(x => x.Atom.GetElements().ToArray()[0].Equals(element));
+                int index = FindIndex(x => x.Atom.GetElements().ToArray()[0].Equals(element));
 
                 RemoveAll(x => x.Atom.GetElements().ToArray()[0].Equals(element));
                 Insert(index, stack);
             }
+        }
+
+        public Compound With(Element element, int size = 1)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            Add(new Stack(element, size));
+            return this;
+        }
+
+        public Compound With(params IAtomic[] items)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            AddRange(items.Select(x => new Stack(x)));
+            return this;
+        }
+
+        public Compound With(params Element[] elements)
+        {
+            if (elements == null)
+                throw new ArgumentNullException(nameof(elements));
+
+            AddRange(elements.Select(x => new Stack(x)));
+            return this;
+        }
+
+        public Compound With(params Stack[] stacks)
+        {
+            if (stacks == null)
+                throw new ArgumentNullException(nameof(stacks));
+
+            AddRange(stacks);
+            return this;
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="Compound"/> contains a stack with the specific element and minimum size.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="size">The minimum size.</param>
+        /// <returns></returns>
+        public bool Contains(Element element, int size)
+        {
+            return this.Any(x => x.Atom.GetElements().Count() == 1 && x.Atom.GetElements().First().Equals(element) && x.Size >= size);
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="Compound"/> contains a specific element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public bool Contains(Element element)
+        {
+            return GetElements().Any(x => x.Equals(element));
         }
 
         /// <summary>
@@ -88,7 +150,7 @@ namespace nChem.Chemistry
             int target = IsIon() ? ToIon().GetCharge() : 0;
             var results = new Dictionary<Stack, int>();
             Tuple<int, Element, Stack> unknown = null;
-
+            
             int i = 0;
             foreach (var stack in this)
             {
@@ -134,10 +196,12 @@ namespace nChem.Chemistry
 
                 switch (atom.Element.AtomicNumber)
                 {
+                    // Hydrogen
                     case 1:
-                        results.Add(stack, GetElements().Any(x => x.IsMetal) ? -1 : 1 * stack.Size);
+                        results.Add(stack, GetElements().Any(x => x.IsMetal()) ? -1 : 1 * stack.Size);
                         continue;
 
+                    // Oxygen
                     case 8:
                         if (results.ContainsKey(atom.Element))
                         {
@@ -148,6 +212,7 @@ namespace nChem.Chemistry
                         results.Add(stack, -2 * stack.Size);
                         continue;
 
+                    // Fluor
                     case 9:
                         results.Add(stack, -1 * stack.Size);
                         continue;
@@ -159,8 +224,8 @@ namespace nChem.Chemistry
             if (unknown != null)
             {
                 int x = byte.MaxValue;
+                int sum = results.Sum(y => y.Value);    
 
-                var sum = results.Sum(y => y.Value);    
                 while (x + sum != target)
                     x--;
 

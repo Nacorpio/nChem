@@ -119,7 +119,7 @@ namespace nChem.Chemistry
         /// </summary>
         /// <returns></returns>
         public float? AtomicWeight => Element.AtomicWeight;
-
+        
         /// <summary>
         /// Returns the elements in the <see cref="IAtomic"/> implementation.
         /// </summary>

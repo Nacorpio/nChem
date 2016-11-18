@@ -15,7 +15,7 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="reactants">The reactants.</param>
         /// <param name="products">The products.</param>
-        public RedoxEquation(IEnumerable<Stack> reactants, IEnumerable<Stack> products) : base(reactants, products)
+        public RedoxEquation(StackCollection reactants, StackCollection products) : base(reactants, products)
         {
         }
 
@@ -24,9 +24,9 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="stacks">The stacks.</param>
         /// <returns></returns>
-        private IEnumerable<KeyValuePair<IAtomic, int[]>> GetOxidationNumbers(IEnumerable<Stack> stacks)
+        private IEnumerable<OxidationResult> GetOxidationNumbers(IEnumerable<Stack> stacks)
         {
-            var results = new List<KeyValuePair<IAtomic, int[]>>();
+            var results = new List<OxidationResult>();
             var queue = new Stack<Stack>(stacks.ToArray());
 
             while (queue.Count > 0)
@@ -35,11 +35,12 @@ namespace nChem.Chemistry
 
                 if (!current.Atom.IsCompound())
                 {
-                    var x = current.Atom.IsIon() ? current.Atom.ToIon().GetCharge() : 0;
+                    results.Add(new OxidationResult(current.Atom, new Dictionary<Element, int>
+                    {
+                        {current.Atom.GetElements().First(), current.Atom.IsIon() ? current.Atom.ToIon().GetCharge() : 0}
+                    }));
 
-                    results.Add(new KeyValuePair<IAtomic, int[]>(current.Atom, new[] {x}));
                     queue.Pop();
-
                     continue;
                 }
 
@@ -52,7 +53,7 @@ namespace nChem.Chemistry
                 if (!compound.TryGetOxidationNumbers(out numbers))
                     throw new Exception("Couldn't retrieve oxidation numbers.");
 
-                results.Add(new KeyValuePair<IAtomic, int[]>(current.Atom, numbers.Select(x => x.Value).ToArray()));
+                results.Add(new OxidationResult(current.Atom, numbers.Reverse().ToDictionary(x => x.Key.Atom.GetElements().First(), x => x.Value)));
                 queue.Pop();
             }
 
@@ -65,41 +66,37 @@ namespace nChem.Chemistry
         /// <param name="reactants">The left-hand side.</param>
         /// <param name="products">The right-hand side.</param>
         /// <returns></returns>
-        private IEnumerable<Tuple<Element, int, int>> GetDeltas(List<KeyValuePair<IAtomic, int[]>> reactants, List<KeyValuePair<IAtomic, int[]>> products)
+        private IEnumerable<RedoxDelta> GetDeltas(List<OxidationResult> reactants, List<OxidationResult> products)
         {
             if (reactants == null)
                 throw new ArgumentNullException(nameof(reactants));
 
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
-
+            
             var elements = reactants
-                .SelectMany(x => x.Key.GetElements())
-                .Concat(products
-                    .SelectMany(x => x.Key.GetElements()))
+                .SelectMany(x => x.Content.GetElements())
+                .Concat(products.SelectMany(x => x.Content.GetElements()))
                 .Distinct()
                 .ToArray();
 
-            var deltas = new List<Tuple<Element, int, int>>(elements.Length);
-            for (var i = 0; i < elements.Length; i++)
+            var deltas = new List<RedoxDelta>(elements.Length);
+            foreach (var e in elements)
             {
-                var element = elements[i];
-
                 var leftFind =
-                    reactants.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
+                    reactants.FirstOrDefault(x => x.Content.GetElements().Contains(e));
 
                 var rightFind =
-                    products.FirstOrDefault(x => x.Key.GetElements().Any(y => Equals(y, element)));
+                    products.FirstOrDefault(x => x.Content.GetElements().Contains(e));
 
-                var leftNumber =
-                    leftFind.Value.Reverse().ToArray()[
-                        leftFind.Key.GetElements().ToList().FindIndex(x => x.Equals(element))];
+                if (leftFind == null || rightFind == null)
+                    throw new NullReferenceException();
 
-                var rightNumber =
-                    rightFind.Value.Reverse().ToArray()[
-                        rightFind.Key.GetElements().ToList().FindIndex(x => x.Equals(element))];
+                if (leftFind.Numbers[leftFind.Content.GetElements().First(x => x.Equals(e))] ==
+                    rightFind.Numbers[rightFind.Content.GetElements().First(x => x.Equals(e))])
+                    continue;
 
-                deltas.Add(new Tuple<Element, int, int>(element, leftNumber, rightNumber));
+                deltas.Add(new RedoxDelta(e, leftFind.Content, rightFind.Content, leftFind.Numbers[leftFind.Content.GetElements().First(x => x.Equals(e))], rightFind.Numbers[rightFind.Content.GetElements().First(x => x.Equals(e))]));
             }
 
             return deltas;
@@ -133,15 +130,25 @@ namespace nChem.Chemistry
             */
 
             // Calculate the oxidation numbers for the reactants and products.
-            IEnumerable<KeyValuePair<IAtomic, int[]>> reactants = GetOxidationNumbers(Reactants).ToArray();
-            IEnumerable<KeyValuePair<IAtomic, int[]>> products = GetOxidationNumbers(Products).ToArray();
+            IEnumerable<OxidationResult> reactants = GetOxidationNumbers(Reactants).ToArray();
+            IEnumerable<OxidationResult> products = GetOxidationNumbers(Products).ToArray();
 
             // Calculate the oxidation- and reduction deltas.
-            Tuple<Element, int, int>[] deltas = GetDeltas(reactants.ToList(), products.ToList()).ToArray();
+            RedoxDelta[] deltas = GetDeltas(reactants.ToList(), products.ToList()).ToArray();
 
-            // Organize the oxidations and reductions in two separate enumerables.
-            var oxidations = deltas.Where(x => x.Item2 < x.Item3);
-            var reductions = deltas.Where(x => x.Item2 > x.Item3);
+            // Organize the oxidations and reductions in two separate enumerable instances.
+            RedoxDelta oxidation = deltas.First(x => x.GetResult() == RedoxDeltaType.Oxidation);
+            RedoxDelta reduction = deltas.First(x => x.GetResult() == RedoxDeltaType.Reduction);
+
+            int oxDelta = Math.Abs(oxidation.Right.Item2 - oxidation.Left.Item2);
+            int redDelta = Math.Abs(reduction.Right.Item2 - oxidation.Left.Item2);
+            
+            // The least common multiple.
+            int lcm = Math.Abs(MathUtils.Lcm(oxDelta, redDelta));
+
+            // We now have the multipliers.
+            int oxMultiplier = lcm/oxDelta;
+            int redMultiplier = lcm/redDelta;
 
             equation = new RedoxEquation(null, null);
             return true;
@@ -158,7 +165,7 @@ namespace nChem.Chemistry
         /// </summary>
         /// <param name="reactants">The reactants.</param>
         /// <param name="products">The products.</param>
-        protected Equation(IEnumerable<Stack> reactants, IEnumerable<Stack> products)
+        protected Equation(StackCollection reactants, StackCollection products)
         {
             Reactants = reactants;
             Products = products;
@@ -167,12 +174,12 @@ namespace nChem.Chemistry
         /// <summary>
         ///     Gets the left-hand assignment (reactants) of the <see cref="Equation" />.
         /// </summary>
-        public IEnumerable<Stack> Reactants { get; }
+        public StackCollection Reactants { get; }
 
         /// <summary>
         ///     Gets the right-hand assignment (products) of the <see cref="Equation" />.
         /// </summary>
-        public IEnumerable<Stack> Products { get; }
+        public StackCollection Products { get; }
 
         /// <summary>
         ///     Balances the <see cref="Equation" />.

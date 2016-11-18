@@ -31,7 +31,7 @@ namespace nChem.Chemistry
         /// <summary>
         /// Gets the element of the <see cref="Stack"/>.
         /// </summary>
-        public IAtomic Atom { get; }
+        public IAtomic Atom { get; internal set; }
 
         /// <summary>
         /// Gets or sets the size of the <see cref="Stack"/>.

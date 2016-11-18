@@ -99,10 +99,163 @@ namespace nChem.Chemistry
             Bismuth = Create(83),
             Polonium = Create(84),
             Astatine = Create(85),
-            Radon = Create(86)
+            Radon = Create(86),
+            Francium = Create(87),
+            Radium = Create(88),
+            Actinium = Create(89),
+            Thorium = Create(90),
+            Protactinium = Create(91),
+            Uranium = Create(92),
+            Neptunium = Create(93),
+            Plutonium = Create(94),
+            Americium = Create(95),
+            Curium = Create(96),
+            Berkelium = Create(97),
+            Californium = Create(98),
+            Einsteinium = Create(99),
+            Fermium = Create(100),
+            Mendelevium = Create(101),
+            Nobelium = Create(102),
+            Lawrencium = Create(103),
+            Rutherfordum = Create(104),
+            Dubnium = Create(105),
+            Seeborgium = Create(106),
+            Bohrium = Create(107),
+            Hassium = Create(108),
+            Meitnerium = Create(109),
+            Darmstadtium = Create(110),
+            Roentgenium = Create(111),
+            Copernicium = Create(112),
+            Nihonium = Create(113),
+            Flerovium = Create(114),
+            Moscovium = Create(115),
+            Livermorium = Create(116),
+            Tennessine = Create(117),
+            Ununoctium = Create(118)
             ;
 
+        public static Element[] AlkaliMetals =
+        {
+            Lithium,
+            Sodium,
+            Potassium,
+            Rubidium,
+            Caesium,
+            Francium
+        };
+
+        public static Element[] AlkalineEarthMetals =
+        {
+            Beryllium,
+            Magnesium,
+            Calcium,
+            Strontium,
+            Barium,
+            Radium
+        };
+
+        public static Element[] Lanthanoids =
+        {
+            Lanthanum,
+            Cerium,
+            Praseodymium,
+            Neodymium,
+            Promethium,
+            Samarium,
+            Europium,
+            Gadolinium,
+            Terbium,
+            Dysprosium,
+            Holmium,
+            Erbium,
+            Thulium,
+            Ytterbium,
+            Lutetium
+        };
+
+        public static Element[] Actinoids =
+        {
+            Actinium,
+            Thorium,
+            Protactinium,
+            Uranium,
+            Neptunium,
+            Plutonium,
+            Americium,
+            Curium,
+            Berkelium,
+            Californium,
+            Einsteinium,
+            Fermium,
+            Mendelevium,
+            Nobelium,
+            Lawrencium
+        };
+
+        public static Element[] TransitionMetals =
+        {
+            Scandium,
+            Titanium,
+            Vanadium,
+            Chromium,
+            Manganese,
+            Iron,
+            Cobalt,
+            Nickel,
+            Copper,
+            Zinc,
+            Yttrium,
+            Zirconium,
+            Niobium,
+            Molybdenum,
+            Technetium,
+            Ruthenium,
+            Rhodium,
+            Palladium,
+            Silver,
+            Cadmium,
+            Hafnium,
+            Tantalum,
+            Tungsten,
+            Rhenium,
+            Osmium,
+            Iridium,
+            Platinum,
+            Gold,
+            Mercury,
+            Rutherfordum,
+            Dubnium,
+            Seeborgium,
+            Bohrium,
+            Hassium,
+            Meitnerium,
+            Darmstadtium,
+            Roentgenium,
+            Copernicium
+        };
+
+        public static Element[] PostTransitionMetals =
+        {
+            Aluminium,
+            Gallium,
+            Indium,
+            Thallium,
+            Tin,
+            Lead,
+            Bismuth,
+            Nihonium,
+            Flerovium,
+            Moscovium,
+            Livermorium,
+            Tennessine
+        };
+
         #endregion
+
+        static Element()
+        {
+            
+        }
 
         /// <summary>
         /// Initializes an instance of the <see cref="Element"/> class.
@@ -143,7 +296,13 @@ namespace nChem.Chemistry
         /// <summary>
         /// Gets a value indicating if the <see cref="Element"/> is a metal.
         /// </summary>
-        public bool IsMetal => FormatUtils.Metals.Contains(Category);
+        public bool IsMetal() =>
+            AlkaliMetals.Contains(this) ||
+            AlkalineEarthMetals.Contains(this) ||
+            Lanthanoids.Contains(this) ||
+            Actinoids.Contains(this) ||
+            TransitionMetals.Contains(this) ||
+            PostTransitionMetals.Contains(this);
 
         /// <summary>
         /// Gets the mass number of the <see cref="Element"/>.
@@ -376,7 +535,7 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public static Element operator +(Element e1, Element e2)
         {
-            return Element.Create(e1.AtomicNumber + e2.AtomicNumber);
+            return Create(e1.AtomicNumber + e2.AtomicNumber);
         }
 
         /// <summary>
@@ -387,21 +546,21 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public static Element operator -(Element e1, Element e2)
         {
-            return Element.Create(e1.AtomicNumber - e2.AtomicNumber);
+            return Create(e1.AtomicNumber - e2.AtomicNumber);
         }
 
         #endregion
 
         public static Element Create(int atomicNumber)
         {
-            if (Element.GetElements() == null || Element.GetElements().Count == 0)
+            if (GetElements() == null || GetElements().Count == 0)
             {
-                Element.FetchPeriodni();
-                File.WriteAllText("elements.json", JsonConvert.SerializeObject(Element.GetElements(), Formatting.Indented));
+                FetchPeriodni();
+                File.WriteAllText("elements.json", JsonConvert.SerializeObject(GetElements(), Formatting.Indented));
             }
 
             Element result = new Element(atomicNumber);
-            Element element = Element.GetElements()?
+            Element element = GetElements()?
                 .FirstOrDefault(x => x.AtomicNumber == atomicNumber);
 
             if (element == null)
@@ -445,10 +604,10 @@ namespace nChem.Chemistry
         /// <returns></returns>
         public Element GetRightNeighbor()
         {
-            if (AtomicNumber + 1 > Element.GetMaxAtomicNumber())
+            if (AtomicNumber + 1 > GetMaxAtomicNumber())
                 throw new IndexOutOfRangeException();
 
-            return Element.Create(AtomicNumber + 1);
+            return Create(AtomicNumber + 1);
         }
 
         /// <summary>
@@ -460,7 +619,7 @@ namespace nChem.Chemistry
             if (AtomicNumber - 1 < 1)
                 throw new IndexOutOfRangeException();
 
-            return Element.Create(AtomicNumber - 1);
+            return Create(AtomicNumber - 1);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

@@ -100,6 +100,11 @@ namespace nChem.Chemistry.Energy
         public int UnpairedElectrons => Shells.Sum(x => x.UnpairedElectrons);
 
         /// <summary>
+        /// Gets the amount of electrons in the valence shell.
+        /// </summary>
+        public int ValenceElectrons => Shells.Last().Electrons;
+
+        /// <summary>
         /// Populates the current <see cref="ShellConfiguration"/> instance.
         /// </summary>
         public void Populate()
@@ -180,16 +185,7 @@ namespace nChem.Chemistry.Energy
                     .SelectMany(k => k.GetElectrons())))
                         .Where(x => x != null);
         }
-
-        /// <summary>
-        /// Returns the valence shell of the <see cref="ShellConfiguration"/>.
-        /// </summary>
-        /// <returns></returns>
-        public Shell GetValenceShell()
-        {
-            return Shells.Last();
-        }
-
+        
         /// <summary>
         /// Converts the current <see cref="ShellConfiguration"/> instance to a dictionary.
         /// </summary>

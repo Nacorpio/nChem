@@ -181,6 +181,36 @@ namespace nChem
                     return -1;
             }
         }
+
+        /// <summary>
+        /// Calculates the lowest common multiple of two values.
+        /// </summary>
+        /// <param name="a">The first value.</param>
+        /// <param name="b">The second value.</param>
+        /// <returns></returns>
+        public static int Lcm(int a, int b)
+        {
+            int num1, num2;
+            if (a > b)
+            {
+                num1 = a;
+                num2 = b;
+            }
+            else
+            {
+                num1 = b;
+                num2 = a;
+            }
+
+            for (int i = 1; i <= num2; i++)
+            {
+                if (num1 * i % num2 == 0)
+                {
+                    return i * num1;
+                }
+            }
+            return num2;
+        }
     }
 
     public static class ChemistryUtils

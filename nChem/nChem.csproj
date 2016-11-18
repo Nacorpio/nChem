@@ -50,15 +50,18 @@
   <ItemGroup>
     <Compile Include="Chemistry\Atom.cs" />
     <Compile Include="Chemistry\Compound.cs" />
+    <Compile Include="Chemistry\OxidationResult.cs" />
     <Compile Include="Chemistry\Particles\Electron.cs" />
     <Compile Include="Chemistry\Element.cs" />
     <Compile Include="Chemistry\Element.Parse.cs" />
     <Compile Include="Chemistry\Particles\Neutron.cs" />
     <Compile Include="Chemistry\Particles\Proton.cs" />
+    <Compile Include="Chemistry\RedoxDelta.cs" />
+    <Compile Include="Chemistry\StackCollection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Chemistry\Ion.cs" />
-    <Compile Include="Chemistry\Reaction.cs" />
+    <Compile Include="Chemistry\Equation.cs" />
     <Compile Include="Chemistry\Energy\Subshell.cs" />
     <Compile Include="Chemistry\Energy\Orbital.cs" />
     <Compile Include="Enums.cs" />

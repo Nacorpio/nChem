@@ -88,7 +88,7 @@ namespace nChem.Chemistry
                     {
                         Name = name,
                         Symbol = symbol,
-                        AtomicWeight = weight,
+                        AtomicWeight = weight
                     });
                 }
             }
@@ -122,7 +122,7 @@ namespace nChem.Chemistry
 
                 foreach (var node in xPathQuery)
                 {
-                    Chemistry.Element element = new Chemistry.Element();
+                    Element element = new Element();
                     HtmlNode[] properties = node.Elements("td").ToArray();
 
                     element.AtomicWeight = float.Parse(properties[2].InnerText);
